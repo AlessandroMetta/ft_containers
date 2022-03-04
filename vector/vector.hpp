@@ -28,7 +28,7 @@ namespace ft
             size_type Size;
         public:
             // Constructs an empty container with the given allocator alloc
-            explicit vector( const allocator_type& alloc = allocator_type() ) 
+            explicit vector( const allocator_type& alloc = allocator_type() )
             : Data(0), _alloc(alloc), Capacity(0), Size(0)
             {
                 Data = _alloc.allocate( 0 );
@@ -36,9 +36,9 @@ namespace ft
 
             // Constructs the container with count copies of elements with value value
             explicit vector( size_type count,
-                 const value_type& value = value_type(),
-                 const allocator_type& alloc = allocator_type())
-                 : Data(0), _alloc(alloc), Capacity(0), Size(0)
+                const value_type& value = value_type(),
+                const allocator_type& alloc = allocator_type())
+                : Data(0), _alloc(alloc), Capacity(0), Size(0)
             {
                 Data = _alloc.allocate( 0 );
                 while (count--)
@@ -60,7 +60,7 @@ namespace ft
 
             // Copy constructor
             vector( const vector& other )
-            : Data(0), Capacity(0), Size(0)
+            : Data(0), _alloc(other._alloc), Capacity(0), Size(0)
             {
                 this->operator=(other);
             };
@@ -80,25 +80,35 @@ namespace ft
                     Size++;
                 }
                 return *this;
-            }
+            };
 
-            reference operator[](size_type i){ return Data[i]; }
-            const_reference operator[](size_type i) const { return Data[i]; }
-            size_type size () const { return Size; }
+            reference operator[](size_type i){ return Data[i]; };
+            const_reference operator[](size_type i) const { return Data[i]; };
+            size_type size () const { return Size; };
+            size_type max_size () const { return _alloc.max_size() / sizeof(value_type); }; // not sure
+            size_type capacity () const { return Capacity; };
+            allocator_type get_allocator () const { return _alloc; };
 
-            void reserve (size_type new_Capacity)
+            bool empty() const
+            { 
+                if (Size == 0)
+                    return true;
+                return false;
+            };
+
+            void reserve (size_type n)
             {
-                std::cout << "--- old capacity = " << Capacity << ", new capacity = " << new_Capacity << std::endl;
-                if (new_Capacity > Capacity)
+                // std::cout << "--- old capacity = " << Capacity << ", new capacity = " << n << std::endl;
+                if (n > Capacity)
                 {
-                    pointer tmp = _alloc.allocate( new_Capacity );
+                    pointer tmp = _alloc.allocate( n );
                     for (size_type i = 0; i < Capacity; i++)
                         tmp[i] = Data[i];
                     _alloc.deallocate(Data, Capacity);
-                    Capacity = new_Capacity;
+                    Capacity = n;
                     Data = tmp;
                 }
-            }
+            };
 
             void push_back(value_type value)
             {
@@ -106,7 +116,38 @@ namespace ft
                     reserve(Capacity == 0 ? 1 : Capacity * 2);
                 Data[Size] = value;
                 Size++;
-            }
+                // std::cout << "new element added" << std::endl;
+            };
+            
+            void pop_back()
+            {
+                if (!this->empty())
+                   _alloc.destroy(Data + Size--); 
+            };
+
+            void resize (size_type n, value_type val = value_type())
+            {
+                // std::cout << "--- old capacity = " << Capacity << ", new capacity = " << n << std::endl;
+                pointer tmp;
+                if (n > Size)
+                {
+                    tmp = _alloc.allocate( n );
+                    for (size_type i = 0; i < Size; i++)
+                        tmp[i] = Data[i];
+                    for (size_type i = Size; i < n; i++)
+                        tmp[i] = val;
+                }
+                else
+                {
+                    tmp = _alloc.allocate( Capacity );
+                    for (size_type i = 0; i < n; i++)
+                        tmp[i] = Data[i];
+                }
+                _alloc.deallocate(Data, Capacity);
+                Size = n;
+                Data = tmp;
+            };
+
     };
 }
 
