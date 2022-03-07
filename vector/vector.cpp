@@ -5,11 +5,12 @@
 template<class T>
 void print(T& vect)
 {
-    for (size_t i = 0; i < vect.size(); i++) std::cout << "ft::vect[" << i << "] = " << vect[i] << std::endl;
+    for (size_t i = 0; i < vect.size(); i++) std::cout << " " << vect[i];
+    std::cout << std::endl;
 }
 
 int main()
-{/*
+{
     ft::vector<int> vect;
     vect.push_back(10);
     vect.push_back(9);
@@ -35,9 +36,10 @@ int main()
     print(vect1);
 
     ft::vector<int> vect2(5, 999);
-    print(vect2);*/
+    print(vect2);
 
     ft::vector<int> myvector;
+    std::cout << myvector.max_size() << std::endl;
 
     // set some initial content:
     for (int i=1;i<10;i++) myvector.push_back(i);
