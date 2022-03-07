@@ -4,6 +4,12 @@
 #include <memory>
 #include <iostream>
 
+/*
+**  TO-DO-LIST
+**  - ALL THE OPERATOR NON-MEMBER FUNCTION
+**  - ALL THE ITERATOR FUNCION (NO ITERATOR YET)
+*/
+
 namespace ft
 {
     template< class T, class Allocator = std::allocator<T> >
