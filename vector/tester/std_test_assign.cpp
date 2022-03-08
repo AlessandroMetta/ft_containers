@@ -1,23 +1,19 @@
 #include <iostream>
 #include <vector>
 
-template<class T>
-void print(T& vect)
-{
-    for (size_t i = 0; i < vect.size(); i++) std::cout << " " << vect[i];
-    std::cout << std::endl;
-}
-
 int main()
 {
-    std::vector<char> characters;
- 
-    characters.assign(5, 'a');
-    print(characters);
- 
-    const std::string extra(6, 'b');
-    characters.assign(extra.begin(), extra.end());
-    print(characters);
+  std::vector<int> first;
+  std::vector<int> second;
 
-    return 0;
+  first.assign (7,100);             // 7 ints with a value of 100
+
+  std::vector<int>::iterator it;
+  it=first.begin()+1;
+
+  second.assign (it,first.end()-1); // the 5 central values of first
+
+  std::cout << "Size of first: " << int (first.size()) << '\n';
+  std::cout << "Size of second: " << int (second.size()) << '\n';
+  return 0;
 }

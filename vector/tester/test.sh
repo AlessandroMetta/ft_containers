@@ -1,8 +1,8 @@
 #------------ VARIABLES ----------------
-RED="\033[1;31m"
-GREEN="\033[1;32m"
-RESET="\033[0m"
-COMPILING="clang++ -Wall -Wextra -Werror -std=c++98 -pedantic"
+TEST_RED="\033[1;31m"
+TEST_GREEN="\033[1;32m"
+TEST_DEFAULT="\033[0m"
+COMPILE_FLAGS="clang++ -Wall -Wextra -Werror -std=c++98 -pedantic"
 
 TEST_NAME=(\
     "constructors" \
@@ -49,7 +49,7 @@ FT_SRCS=(\
     ft_test_clear.cpp \
     )
     
-lenght=${#TEST_NAME[@]}
+how_many=${#TEST_NAME[@]}
 
 
 #------------ START HERE ----------------
@@ -58,16 +58,16 @@ echo "-------------------------"
 echo "|     VECTOR TESTER     |"
 echo "-------------------------"
 
-for (( i = 0; i < lenght; i++));
+for (( i = 0; i < how_many; i++));
 do
     printf "testing ${TEST_NAME[$i]}...\t"
-    ${COMPILING} ${FT_SRCS[$i]} ; ./a.out > yours.o
+    ${COMPILE_FLAGS} ${FT_SRCS[$i]} ; ./a.out > yours.o
     # leaks -atExit -- ./a.out | grep "total leaked bytes."
-    ${COMPILING} ${STD_SRCS[$i]} ; ./a.out > std.o
+    ${COMPILE_FLAGS} ${STD_SRCS[$i]} ; ./a.out > std.o
     if cmp -s yours.o std.o; then
-        echo "${GREEN}OK${RESET}"
+        echo "${TEST_GREEN}OK${TEST_DEFAULT}"
     else
-       echo "${RED}KO${RESET}"
+       echo "${TEST_RED}KO${TEST_DEFAULT}"
     fi
 done
 

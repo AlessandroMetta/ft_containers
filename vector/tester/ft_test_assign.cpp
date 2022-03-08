@@ -3,11 +3,17 @@
 
 int main()
 {
-    ft::vector<char> characters;
+    ft::vector<int> first;
+  ft::vector<int> second;
 
-    characters.assign(5, 'a');
-    for (size_t i = 0; i < characters.size(); i++) std::cout << " " << characters[i];
-    std::cout << std::endl;
+  first.assign (7,100);             // 7 ints with a value of 100
 
-    return 0;
+  ft::vector<int>::iterator it;
+  it=first.begin()+1;
+
+  second.assign (it,first.end()-1); // the 5 central values of first
+
+  std::cout << "Size of first: " << int (first.size()) << '\n';
+  std::cout << "Size of second: " << int (second.size()) << '\n';
+  return 0;
 }
