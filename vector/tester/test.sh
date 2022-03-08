@@ -17,6 +17,7 @@ TEST_NAME=(\
     "push_back/pop_back" \
     "swap" \
     "clear" \
+    "relational operators" \
     )
 
 how_many=${#TEST_NAME[@]}
@@ -34,6 +35,7 @@ STD_SRCS=(\
     "std_test_pb.cpp" \
     "std_test_swap.cpp" \
     "std_test_clear.cpp" \
+    "std_test_rel_opr.cpp" \
     )
 
 FT_SRCS=(\
@@ -49,6 +51,7 @@ FT_SRCS=(\
     "ft_test_pb.cpp" \
     "ft_test_swap.cpp" \
     "ft_test_clear.cpp" \
+    "ft_test_rel_opr.cpp" \
     )
 
 #------------ PROGRAM START HERE ----------------
