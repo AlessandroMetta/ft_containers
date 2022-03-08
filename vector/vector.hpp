@@ -2,14 +2,16 @@
 # define __VECTOR_HPP__
 
 #include <memory>
-#include <iostream>
+#include <limits>
+#include <stdexcept>
 
 /*
 **  TO-DO-LIST
 **  - ITERATOR
-**  - ITERATOR CONSTRUCTOR
-**  - ALL ITERATOR FUNCIONS
+**  - CONSTRUCTOR WITH ITERATOR
+**  - ALL ITERATOR FUNCIONS (erase, insert)
 **  - ALL THE OPERATOR NON-MEMBER FUNCTIONS
+**  - ASSIGN WITH ITERATOR
 */
 
 namespace ft
@@ -131,8 +133,17 @@ namespace ft
             // ELEMENT ACCESS
             reference operator[](size_type n){ return _data[n]; };
             const_reference operator[](size_type n) const { return _data[n]; };
-            reference at(size_type n){ return _data[n]; };
-            const_reference at(size_type n) const { return _data[n]; };
+            reference at(size_type n){
+                if ( n >= _size )
+                    throw std::out_of_range("vector");
+                return _data[n];
+            };
+            const_reference at(size_type n) const
+            {
+                if ( n >= _size )
+                    throw std::out_of_range("vector");
+                return _data[n];
+            };
             reference front(){ return _data[0]; };
             const_reference front() const { return _data[0]; };
             reference back(){ return _data[_size - 1]; };
