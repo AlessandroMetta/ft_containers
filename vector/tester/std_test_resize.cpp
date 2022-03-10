@@ -12,6 +12,8 @@ int main ()
   myvector.resize(8,100);
   myvector.resize(12);
 
+  std::cout << "myvector size is :" << myvector.size() << std::endl;
+  std::cout << "myvector size is :" << myvector.capacity() << std::endl;
   std::cout << "myvector contains:";
   for (size_t i=0;i<myvector.size();i++)
     std::cout << ' ' << myvector[i];

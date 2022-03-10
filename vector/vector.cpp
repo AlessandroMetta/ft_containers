@@ -22,6 +22,8 @@ int main()
     vect.push_back(3);
     vect.push_back(2);
     print(vect);
+    // std::cout << vect.end() << std::endl;
+/*
     std::cout << vect.size() << std::endl;
     std::cout << vect.capacity() << std::endl;
     vect.pop_back();
@@ -52,6 +54,6 @@ int main()
     for (size_t i=0;i<myvector.size();i++)
     std::cout << ' ' << myvector[i];
     std::cout << '\n';
-
+*/
     return 0;
 }

@@ -4,6 +4,7 @@
 #include <memory>
 #include <limits>
 #include <stdexcept>
+#include <string.h>
 
 /*
 **  TO-DO-LIST
@@ -27,7 +28,7 @@ namespace ft
             typedef T&  reference;
             
             vector_iterator() {}
-            vector_iterator(const vector_iterator & copy) { this->operator=(copy); }
+            vector_iterator(const vector_iterator& copy) { this->operator=(copy); }
             vector_iterator(pointer ptr) : ptr(ptr) {}
             ~vector_iterator() {}
             vector_iterator&    operator=( const vector_iterator & r ) { ptr = r.ptr; return *this; }
@@ -35,10 +36,10 @@ namespace ft
             vector_iterator     operator++(int) { vector_iterator tmp = *this; ++ptr; return tmp; }
             vector_iterator&    operator--() { --ptr; return *this; }
             vector_iterator     operator--(int) { vector_iterator tmp = *this; --ptr; return tmp; }
-            vector_iterator&    operator+(int n) const { vector_iterator tmp = *this; ptr += n; return tmp; }
-            vector_iterator     operator-(int n) const { vector_iterator tmp = *this; ptr -= n; return tmp; }
-            vector_iterator&    operator+=(int n) { for(; n < 0; ++n) ptr--; for(; n > 0; --n) prt++; return *this; }
-            vector_iterator&    operator-=(int n) { for(; n > 0; --n) ptr--; for(; n < 0; ++n) prt++; return *this; }
+            vector_iterator&    operator+(int n) const { vector_iterator tmp = *this; return ptr += n; }
+            vector_iterator     operator-(int n) const { vector_iterator tmp = *this; return ptr -= n; }
+            vector_iterator&    operator+=(int n) { for(; n < 0; ++n) ptr--; for(; n > 0; --n) ptr++; return *this; }
+            vector_iterator&    operator-=(int n) { for(; n > 0; --n) ptr--; for(; n < 0; ++n) ptr++; return *this; }
             reference           operator*() { return *ptr; }
             pointer             operator->() { return ptr; }
             reference           operator[]( int n ) const { return *(*this + n); }
@@ -54,12 +55,16 @@ namespace ft
     class const_vector_iterator : public vector_iterator<T>
     {
         public:
+            typedef T   value_type;
+            typedef T*  pointer;
+            typedef T&  reference;
+
             const_vector_iterator() {}
-            const_vector_iterator(const vector_iterator & copy) { this->operator=(copy); }
-            const_vector_iterator(pointer ptr) : ptr(ptr) {}
+            const_vector_iterator(const const_vector_iterator & copy) { this->operator=(copy); }
+            const_vector_iterator(pointer ptr) { this->ptr = ptr; }
             ~const_vector_iterator() {}
-            const_vector_iterator&      operator=( const const_vector_iterator & r ) { ptr = r.ptr; return *this; }
-            reference                   operator*() { return *ptr; }
+            const_vector_iterator&      operator=( const const_vector_iterator & r ) { this->ptr = r.ptr; return *this; }
+            reference                   operator*() { return *this->ptr; }
             reference                   operator[]( int n ) const { return *(*this + n); }
     };
     
@@ -67,41 +72,49 @@ namespace ft
     class reverse_vector_iterator : public vector_iterator<T>
     {
         public:
+            typedef T   value_type;
+            typedef T*  pointer;
+            typedef T&  reference;
+
             reverse_vector_iterator() {}
-            reverse_vector_iterator(const vector_iterator & copy) { this->operator=(copy); }
-            reverse_vector_iterator(pointer ptr) : ptr(ptr) {}
+            reverse_vector_iterator(const reverse_vector_iterator & copy) { this->operator=(copy); }
+            reverse_vector_iterator(pointer ptr) { this->ptr = ptr; }
             ~reverse_vector_iterator() {}
-            reverse_vector_iterator&    operator=( const reverse_vector_iterator & r ) { ptr = r.ptr; return *this; }
-            reverse_vector_iterator&    operator++() { --ptr; return *this; }
-            reverse_vector_iterator     operator++(int) { reverse_vector_iterator tmp = *this; --ptr; return tmp; }
-            reverse_vector_iterator&    operator--() { ++ptr; return *this; }
-            reverse_vector_iterator     operator--(int) { reverse_vector_iterator tmp = *this; ++ptr; return tmp; }
-            reverse_vector_iterator&    operator+(int n) const { reverse_vector_iterator tmp = *this; ptr += n; return tmp; }
-            reverse_vector_iterator     operator-(int n) const { reverse_vector_iterator tmp = *this; ptr -= n; return tmp; }
-            reverse_vector_iterator&    operator+=(int n) { for(; n < 0; ++n) ptr++; for(; n > 0; --n) prt--; return *this; }
-            reverse_vector_iterator&    operator-=(int n) { for(; n > 0; --n) ptr++; for(; n < 0; ++n) prt--; return *this; }
-            reference           operator*() { return *ptr; }
-            pointer             operator->() { return ptr; }
+            reverse_vector_iterator&    operator=( const reverse_vector_iterator & r ) { this->ptr = r.ptr; return *this; }
+            reverse_vector_iterator&    operator++() { this->ptr--; return *this; }
+            reverse_vector_iterator     operator++(int) { reverse_vector_iterator tmp = *this; this->ptr--; return tmp; }
+            reverse_vector_iterator&    operator--() { this->ptr++; return *this; }
+            reverse_vector_iterator     operator--(int) { reverse_vector_iterator tmp = *this; this->ptr++; return tmp; }
+            reverse_vector_iterator&    operator+(int n) const { reverse_vector_iterator tmp = *this; this->ptr += n; return tmp; }
+            reverse_vector_iterator     operator-(int n) const { reverse_vector_iterator tmp = *this; this->ptr -= n; return tmp; }
+            reverse_vector_iterator&    operator+=(int n) { for(; n < 0; ++n) this->ptr++; for(; n > 0; --n) this->prt--; return *this; }
+            reverse_vector_iterator&    operator-=(int n) { for(; n > 0; --n) this->ptr++; for(; n < 0; ++n) this->prt--; return *this; }
+            reference           operator*() { return *this->ptr; }
+            pointer             operator->() { return this->ptr; }
             reference           operator[]( int n ) const { return *(*this - n); }
-            bool				operator==(const reverse_vector_iterator &r) const { return (ptr == r.ptr); };
-			bool				operator!=(const reverse_vector_iterator& r) const { return (ptr != r.ptr); };
-			bool				operator>(const reverse_vector_iterator& r) const { return (ptr > r.ptr); };
-			bool				operator>=(const reverse_vector_iterator& r) const { return (ptr >= r.ptr); };
-			bool				operator<(const reverse_vector_iterator& r) const { return (ptr < r.ptr); };
-			bool				operator<=(const reverse_vector_iterator& r) const { return (ptr <= r.ptr); };
+            bool				operator==(const reverse_vector_iterator &r) const { return (this->ptr == r.ptr); };
+			bool				operator!=(const reverse_vector_iterator& r) const { return (this->ptr != r.ptr); };
+			bool				operator>(const reverse_vector_iterator& r) const { return (this->ptr > r.ptr); };
+			bool				operator>=(const reverse_vector_iterator& r) const { return (this->ptr >= r.ptr); };
+			bool				operator<(const reverse_vector_iterator& r) const { return (this->ptr < r.ptr); };
+			bool				operator<=(const reverse_vector_iterator& r) const { return (this->ptr <= r.ptr); };
     };
 
     template< class T >
     class const_reverse_vector_iterator : public reverse_vector_iterator<T>
     {
         public:
+            typedef T   value_type;
+            typedef T*  pointer;
+            typedef T&  reference;
+
             const_reverse_vector_iterator() {}
-            const_reverse_vector_iterator(const vector_iterator & copy) { this->operator=(copy); }
-            const_reverse_vector_iterator(pointer ptr) : ptr(ptr) {}
+            const_reverse_vector_iterator(const const_reverse_vector_iterator & copy) { this->operator=(copy); }
+            const_reverse_vector_iterator(pointer ptr) { this->ptr = ptr; }
             ~const_reverse_vector_iterator() {}
-            const_reverse_vector_iterator&    operator=( const const_reverse_vector_iterator & r ) { ptr = r.ptr; return *this; }
-            const reference           operator*() { return *ptr; }
-            const reference           operator[]( int n ) const { return *(*this - n); }
+            const_reverse_vector_iterator&    operator=( const const_reverse_vector_iterator & r ) { this->ptr = r.ptr; return *this; }
+            const value_type&           operator*() { return *this->ptr; }
+            const value_type&           operator[]( int n ) const { return *(*this - n); }
     };
 
     template< class T, class Allocator = std::allocator<T> >
@@ -118,8 +131,8 @@ namespace ft
             typedef const T&   const_reference;
             typedef ft::vector_iterator<T>   iterator;
             typedef ft::const_vector_iterator<T>   const_iterator;
-            typedef ft::reverse_vecto_iterator<T>   reverse_iterator;
-            typedef ft::const_reverse_vecto_iterator<T>   const_reverse_iterator;
+            typedef ft::reverse_vector_iterator<T>   reverse_iterator;
+            typedef ft::const_reverse_vector_iterator<T>   const_reverse_iterator;
         private:
             pointer _data;
             allocator_type _alloc;
@@ -140,22 +153,18 @@ namespace ft
                 : _data(0), _alloc(alloc), _capacity(0), _size(0)
             {
                 _data = _alloc.allocate( 0 );
-                while (count--)
-                {
-                    if (_size + 1 > _capacity)
-                        reserve(_capacity == 0 ? 1 : _capacity * 2);
-                    _data[_size] = value;
-                    _size++;
-                }
+                assign(count, value);
             };
 
             // Constructs the container with the contents of the range [first, last).
-            template< class InputIt >
-            vector( InputIt first, InputIt last,
-                const Allocator& alloc = Allocator() )
-            {
-                assign(first, last);
-            };
+            // template< class InputIt >
+            // vector( InputIt first, InputIt last,
+            //     const Allocator& alloc = Allocator() ) 
+            //     : _data(0), _alloc(alloc), _size(0), _capacity(0)
+            // {
+            //     _data = _alloc.allocat(0);
+            //     assign(first, last);
+            // };
 
             // Copy constructor
             vector( const vector& other )
@@ -218,6 +227,16 @@ namespace ft
                 }
             };
 
+            // ITERATORS FUNCTION
+            iterator begin() { return iterator(_data); };
+            const_iterator begin() const { return const_iterator(_data); };
+            iterator end(){ return iterator(_data + _size); };
+            const_iterator end() const { return const_iterator(_data + _size); };
+            reverse_iterator rbegin(){ return reverse_iterator(_data); };
+            const_reverse_iterator rbegin() const { return const_reverse_iterator(_data); };
+            reverse_iterator rend(){ return reverse_iterator(_data + _size); };
+            const_reverse_iterator rend() const { return const_reverse_iterator(_data + _size); };
+
             // ELEMENT ACCESS
             reference operator[](size_type n){ return _data[n]; };
             const_reference operator[](size_type n) const { return _data[n]; };
@@ -249,10 +268,13 @@ namespace ft
                 _data[_size] = value;
                 _size++;
             };
-            /*
+            
             template <class InputIterator>
-                void assign (InputIterator first, InputIterator last);
-            */
+                void assign (InputIterator first, InputIterator last)
+            {
+                clear();
+                insert(begin(), first, last);
+            };
 
             void assign (size_type n, const value_type& val)
             {
