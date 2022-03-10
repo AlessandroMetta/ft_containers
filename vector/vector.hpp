@@ -4,15 +4,11 @@
 #include <memory>
 #include <limits>
 #include <stdexcept>
-#include <string.h>
+#include <iostream>
 
 /*
 **  TO-DO-LIST
-**  - ITERATOR
-**  - CONSTRUCTOR WITH ITERATOR
-**  - ALL ITERATOR FUNCIONS (erase, insert)
-**  - ALL THE OPERATOR NON-MEMBER FUNCTIONS
-**  - ASSIGN WITH ITERATOR
+**  - erase
 */
 
 namespace ft
@@ -36,13 +32,13 @@ namespace ft
             vector_iterator     operator++(int) { vector_iterator tmp = *this; ++ptr; return tmp; }
             vector_iterator&    operator--() { --ptr; return *this; }
             vector_iterator     operator--(int) { vector_iterator tmp = *this; --ptr; return tmp; }
-            vector_iterator&    operator+(int n) const { vector_iterator tmp = *this; return ptr += n; }
-            vector_iterator     operator-(int n) const { vector_iterator tmp = *this; return ptr -= n; }
+            vector_iterator     operator+(int n) const { vector_iterator tmp = *this; return tmp += n; }
+            vector_iterator     operator-(int n) const { vector_iterator tmp = *this; return tmp -= n; }
             vector_iterator&    operator+=(int n) { for(; n < 0; ++n) ptr--; for(; n > 0; --n) ptr++; return *this; }
             vector_iterator&    operator-=(int n) { for(; n > 0; --n) ptr--; for(; n < 0; ++n) ptr++; return *this; }
-            reference           operator*() { return *ptr; }
-            pointer             operator->() { return ptr; }
-            reference           operator[]( int n ) const { return *(*this + n); }
+            value_type&         operator*() { return *ptr; }
+            value_type*         operator->() { return ptr; }
+            value_type&         operator[]( int n ) const { return *(*this + n); }
             bool				operator==(const vector_iterator &r) const { return (ptr == r.ptr); };
 			bool				operator!=(const vector_iterator& r) const { return (ptr != r.ptr); };
 			bool				operator>(const vector_iterator& r) const { return (ptr > r.ptr); };
@@ -85,8 +81,8 @@ namespace ft
             reverse_vector_iterator     operator++(int) { reverse_vector_iterator tmp = *this; this->ptr--; return tmp; }
             reverse_vector_iterator&    operator--() { this->ptr++; return *this; }
             reverse_vector_iterator     operator--(int) { reverse_vector_iterator tmp = *this; this->ptr++; return tmp; }
-            reverse_vector_iterator&    operator+(int n) const { reverse_vector_iterator tmp = *this; this->ptr += n; return tmp; }
-            reverse_vector_iterator     operator-(int n) const { reverse_vector_iterator tmp = *this; this->ptr -= n; return tmp; }
+            reverse_vector_iterator&    operator+(int n) const { reverse_vector_iterator tmp = *this; return tmp += n; }
+            reverse_vector_iterator     operator-(int n) const { reverse_vector_iterator tmp = *this; return tmp -= n; }
             reverse_vector_iterator&    operator+=(int n) { for(; n < 0; ++n) this->ptr++; for(; n > 0; --n) this->prt--; return *this; }
             reverse_vector_iterator&    operator-=(int n) { for(; n > 0; --n) this->ptr++; for(; n < 0; ++n) this->prt--; return *this; }
             reference           operator*() { return *this->ptr; }
@@ -157,14 +153,14 @@ namespace ft
             };
 
             // Constructs the container with the contents of the range [first, last).
-            // template< class InputIt >
-            // vector( InputIt first, InputIt last,
-            //     const Allocator& alloc = Allocator() ) 
-            //     : _data(0), _alloc(alloc), _size(0), _capacity(0)
-            // {
-            //     _data = _alloc.allocat(0);
-            //     assign(first, last);
-            // };
+            template< class InputIt >
+            vector( InputIt first, InputIt last,
+                const Allocator& alloc = Allocator() ) 
+                : _data(0), _alloc(alloc), _capacity(0), _size(0)
+            {
+                _data = _alloc.allocate(0);
+                assign(first, last);
+            };
 
             // Copy constructor
             vector( const vector& other )
@@ -178,13 +174,12 @@ namespace ft
 
             vector & operator=(const vector& x)
             {
-                if (_data != 0) _alloc.deallocate(_data, _size);
+                // if (_data != 0) _alloc.deallocate(_data, _size);
                 _alloc = x._alloc;
-                _capacity = x._capacity;
                 _size = x._size;
-                _data = _alloc.allocate( _capacity );
-                for (size_t i = 0; i < x._size; i++)
-                    _data[i] = x[i];
+                _capacity = x._capacity;
+                _data = _alloc.allocate( 0 );
+                assign(x.begin(), x.end());
                 return *this;
             };
 
@@ -269,10 +264,13 @@ namespace ft
                 _size++;
             };
             
-            template <class InputIterator>
-                void assign (InputIterator first, InputIterator last)
+            void assign (iterator first, iterator last)
             {
+                size_type i = 0;
                 clear();
+                for(iterator it = first; it != last; it++) i++;
+                _alloc.allocate( i );
+                _capacity = i;
                 insert(begin(), first, last);
             };
 
@@ -290,17 +288,55 @@ namespace ft
                     _alloc.deallocate(_data, _size);
                     _capacity = n;
                     _size = n;
-                    _data = _alloc.allocate( _capacity );
+                    _data = _alloc.allocate( n );
                     for (size_t i = 0; i < _capacity; i++)
                         _data[i] = val;
                 }
             };
 
-            void    assign (iterator first, iterator last)
+			iterator					insert (iterator position, const value_type& val)
 			{
-				clear();
-				insert(begin(), first, last);
-			}
+                size_type pos_index = 0;
+
+                if (position > end()) throw std::length_error("out of range");
+                for (iterator it = begin(); it + pos_index != position && pos_index < _size; pos_index++) ;
+                if (_size + 1 > _capacity)
+                    reserve(_capacity == 0 ? 1 : _capacity * 2);
+                for (size_type i = _size; i > pos_index; i--)
+                    _data[i] = _data[i - 1];
+                _data[pos_index] = val;
+                _size++;
+
+                return iterator(&_data[pos_index]);                
+			};
+
+            /*iterator					insert (iterator position, const value_type& val)
+			{
+                size_type pos = 0;
+
+				if (position > end()) throw std::length_error("out of range");
+				for (iterator it = begin(); it + pos != position && pos < _size; pos++) ;
+				if (_capacity < _size + 1)
+					reserve(_capacity < 2 ? 2 : _capacity * 2);//reserve(mem_size + 1);
+				for (size_type i = _capacity - 1; i > pos; i--)
+					_data[i] = _data[i - 1];
+				_data[pos] = val;
+				_size++;
+
+				return iterator(&_data[pos]);
+            };*/
+
+			void						insert (iterator position, size_type n, const value_type& val)
+			{
+                while (n--)
+                    position = insert(position, val);
+			};
+
+			void						insert (iterator position, iterator first, iterator last)
+			{
+                for ( ; first != last; ++first)
+                    position = insert(position, *first) + 1;
+			};
 
             void pop_back()
             {

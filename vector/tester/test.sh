@@ -5,11 +5,11 @@ TEXT_COLOR_DEFAULT="\033[0m"
 COMPILE_FLAGS="clang++ -Wall -Wextra -Werror -std=c++98 -pedantic"
 
 TEST_NAME=(\
-    # "constructors" \
+    "constructors" \
     "= operator" \
     "at" \
     "[] operator" \
-    # "assign" \
+    "assign" \
     "front/back" \
     "size, max_size and capacity" \
     "resize" \
@@ -23,11 +23,11 @@ TEST_NAME=(\
 how_many=${#TEST_NAME[@]}
 
 STD_SRCS=(\
-    # "std_test_constr.cpp" \
+    "std_test_constr.cpp" \
     "std_test_=.cpp" \
     "std_test_at.cpp" \
     "std_test_[].cpp" \
-    # "std_test_assign.cpp" \
+    "std_test_assign.cpp" \
     "std_test_front_back.cpp" \
     "std_test_ms_s_c.cpp" \
     "std_test_resize.cpp" \
@@ -39,11 +39,11 @@ STD_SRCS=(\
     )
 
 FT_SRCS=(\
-    # "ft_test_constr.cpp" \
+    "ft_test_constr.cpp" \
     "ft_test_=.cpp" \
     "ft_test_at.cpp" \
     "ft_test_[].cpp" \
-    # "ft_test_assign.cpp" \
+    "ft_test_assign.cpp" \
     "ft_test_front_back.cpp" \
     "ft_test_ms_s_c.cpp" \
     "ft_test_resize.cpp" \
