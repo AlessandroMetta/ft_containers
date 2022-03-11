@@ -14,6 +14,7 @@ int main ()
   std::cout << '\n';
 
   myvector.clear();
+
   myvector.push_back (1101);
   myvector.push_back (2202);
 

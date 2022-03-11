@@ -1,59 +1,71 @@
-#include <iostream>
-#include <vector>
 #include "vector.hpp"
+#include <vector>
+#include <iostream>
+#include <iomanip>
 
-template<class T>
-void print(T& vect)
+#define NC "\033[0m"
+#define RED(x) "\033[31m" x NC
+#define GR "\033[32m"
+#define CY "\033[36m"
+
+template<typename T, typename T2>
+void	print(T it, T ite, T2 _it, T2 _ite, std::string testName)
 {
-    for (size_t i = 0; i < vect.size(); i++) std::cout << " " << vect[i];
-    std::cout << std::endl;
+	std::cout << std::setfill(' ') << std::setw(testName.size() + 5 + 6) << CY << "FT_VECTOR: " << NC;
+	for ( ; it != ite; ++it)
+		std::cout << *it << " ";
+	std::cout << std::endl;
+	std::cout << std::setfill(' ') << std::setw(testName.size() + 5) << "/" << std::endl;
+	std::cout << GR <<testName << NC << " ->" << std::endl;
+	std::cout << std::setfill(' ') << std::setw(testName.size() + 5) << "\\" << std::endl;
+	std::cout << std::setfill(' ') << std::setw(testName.size() + 5 + 6) << CY << "VECTOR:    " << NC;
+	for ( ; _it != _ite; ++_it)
+		std::cout << *_it << " ";
+	std::cout << std::endl;
+	std::cout << "---------------------------------------------------------" << std::endl;
 }
 
-int main()
+int		main(void)
 {
-    ft::vector<int> vect;
-    vect.push_back(10);
-    vect.push_back(9);
-    vect.push_back(8);
-    vect.push_back(7);
-    vect.push_back(6);
-    vect.push_back(5);
-    vect.push_back(4);
-    vect.push_back(3);
-    vect.push_back(2);
-    print(vect);
-    // std::cout << vect.end() << std::endl;
-/*
-    std::cout << vect.size() << std::endl;
-    std::cout << vect.capacity() << std::endl;
-    vect.pop_back();
-    std::cout << vect.size() << std::endl;
-    std::cout << vect.capacity() << std::endl;
-    print(vect);
+	ft::vector<int> prova1;
+	std::vector<int> _prova1;
 
-    
-    std::cout << vect.max_size() << std::endl;
+	prova1.assign(10, 5);
+	_prova1.assign(10, 5);
+	print(prova1.begin(), prova1.end(), _prova1.begin(), _prova1.end(), "ASSIGN");
 
-    ft::vector<int> vect1(vect);
-    print(vect1);
+	// prova1.erase(prova1.begin());
+	// _prova1.erase(_prova1.begin());
+	// print(prova1.begin(), prova1.end(), _prova1.begin(), _prova1.end(), "ERASE");
 
-    ft::vector<int> vect2(5, 999);
-    print(vect2);
+	prova1.insert(prova1.begin(), 10);
+	_prova1.insert(_prova1.begin(), 10);
+	print(prova1.begin(), prova1.end(), _prova1.begin(), _prova1.end(), "INSERT");
 
-    ft::vector<int> myvector;
-    std::cout << myvector.max_size() << std::endl;
+	prova1.pop_back();
+	_prova1.pop_back();
+	print(prova1.begin(), prova1.end(), _prova1.begin(), _prova1.end(), "POP_BACK");
 
-    // set some initial content:
-    for (int i=1;i<10;i++) myvector.push_back(i);
+	prova1.push_back(500);
+	_prova1.push_back(500);
+	print(prova1.begin(), prova1.end(), _prova1.begin(), _prova1.end(), "PUSH_BACK");
 
-    myvector.resize(5);
-    myvector.resize(8,100);
-    myvector.resize(12);
+	prova1.resize(3);
+	_prova1.resize(3);
+	print(prova1.begin(), prova1.end(), _prova1.begin(), _prova1.end(), "RESIZE");
 
-    std::cout << "myvector contains:";
-    for (size_t i=0;i<myvector.size();i++)
-    std::cout << ' ' << myvector[i];
-    std::cout << '\n';
-*/
-    return 0;
+	ft::vector<int> prova2;
+	std::vector<int> _prova2;
+	ft::vector<int> prova2_d;
+	std::vector<int> _prova2_d;
+	for(int i = 0; i < 10; ++i) {
+		prova2.push_back(i + 1);
+		prova2_d.push_back(i + 1 * 1000);
+		_prova2.push_back(i + 1);
+		_prova2_d.push_back(i + 1 * 1000);
+
+	}
+	prova2.swap(prova2_d);
+	_prova2.swap(_prova2_d);
+	print(prova2.begin(), prova2.end(), _prova2.begin(), _prova2.end(), "SWAP");
 }

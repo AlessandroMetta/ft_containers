@@ -18,6 +18,8 @@ TEST_NAME=(\
     "swap" \
     "clear" \
     "relational operators" \
+    "insert" \
+    "erase" \
     )
 
 how_many=${#TEST_NAME[@]}
@@ -36,6 +38,8 @@ STD_SRCS=(\
     "std_test_swap.cpp" \
     "std_test_clear.cpp" \
     "std_test_rel_opr.cpp" \
+    "std_test_insert.cpp" \
+    "std_test_erase.cpp" \
     )
 
 FT_SRCS=(\
@@ -52,25 +56,26 @@ FT_SRCS=(\
     "ft_test_swap.cpp" \
     "ft_test_clear.cpp" \
     "ft_test_rel_opr.cpp" \
+    "ft_test_insert.cpp" \
+    "ft_test_erase.cpp" \
     )
 
 #------------ PROGRAM START HERE ----------------
 
-echo "-------------------------"
+echo "—————————————————————————"
 echo "|     VECTOR TESTER     |"
-echo "-------------------------"
+echo "—————————————————————————"
 
 for (( i = 0; i < how_many; i++));
 do
     printf "testing ${TEST_NAME[$i]}...\t"
-    ${COMPILE_FLAGS} ${FT_SRCS[$i]} ; ./a.out > yours.o
+    ${COMPILE_FLAGS} ${FT_SRCS[$i]} ; ./a.out > yours.output
     # leaks -atExit -- ./a.out | grep "total leaked bytes."
-    ${COMPILE_FLAGS} ${STD_SRCS[$i]} ; ./a.out > std.o
-    if cmp -s yours.o std.o; then
+    ${COMPILE_FLAGS} ${STD_SRCS[$i]} ; ./a.out > std.output
+    if cmp -s yours.output std.output; then
         echo "${TEXT_COLOR_GREEN}OK${TEXT_COLOR_DEFAULT}"
     else
-       echo "${TEXT_COLOR_RED}KO${TEXT_COLOR_DEFAULT}"
+       echo "${TEXT_COLOR_RED}KO${TEXT_COLOR_DEFAULT}" ; mv yours.output ${TEST_NAME[$i]}_yours.output ; mv std.output ${TEST_NAME[$i]}_std.output
     fi
 done
-
-rm a.out std.o yours.o
+    rm a.output std.output yours.output

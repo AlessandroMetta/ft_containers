@@ -18,6 +18,7 @@ int main()
   for (unsigned i=0; i<first.size(); i++)
     std::cout << ' ' << first.at(i);
   std::cout << '\n';
+
   std::cout << "Size of second: " << int (second.size()) << "; capacity of second: " << int (second.capacity()) << '\n';
   std::cout << "second contains:";
   for (unsigned i=0; i<second.size(); i++)
