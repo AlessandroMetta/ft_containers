@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "../algorithm.hpp"
+#include "../utils/algorithm.hpp"
 
 /*
 **  TO-DO-LIST
