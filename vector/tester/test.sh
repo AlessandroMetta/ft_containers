@@ -78,4 +78,4 @@ do
        echo "${TEXT_COLOR_RED}KO${TEXT_COLOR_DEFAULT}" ; mv yours.output ${TEST_NAME[$i]}_yours.output ; mv std.output ${TEST_NAME[$i]}_std.output
     fi
 done
-    rm a.output std.output yours.output
+    rm a.out std.output yours.output

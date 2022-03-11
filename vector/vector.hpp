@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#include "../algorithm.hpp"
+
 /*
 **  TO-DO-LIST
 **  - swap (the capacity is not swapped)
@@ -349,9 +351,9 @@ namespace ft
 
         void swap (vector& x)
         {
-            vector tmp = x;
-            x = *this;
-            *this = tmp;
+            ft::swap(_data, x._data);
+            ft::swap(_size, x._size);
+            ft::swap(_capacity, x._capacity);
         };
 
         void clear()
