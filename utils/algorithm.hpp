@@ -1,7 +1,7 @@
 #ifndef __FT_ALGORITHM_HPP__
 # define __FT_ALGORITHM_HPP__
 
-#include "iterator/iterator.hpp"
+#include "iterator.hpp"
 
 namespace ft
 {
