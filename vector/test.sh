@@ -2,7 +2,8 @@
 TEXT_COLOR_RED="\033[1;31m"
 TEXT_COLOR_GREEN="\033[1;32m"
 TEXT_COLOR_DEFAULT="\033[0m"
-COMPILE_FLAGS="clang++ -Wall -Wextra -Werror -std=c++98 -pedantic"
+COMPILE_FLAGS="c++ -Wall -Wextra -Werror -std=c++98"
+# COMPILE_FLAGS="c++ -Wall -Wextra -Werror -std=c++98 -fsanitize=address -static-libsan -g"
 
 TEST_NAME=(\
     "constructors" \
@@ -69,13 +70,13 @@ echo "————————————————————————�
 for (( i = 0; i < how_many; i++));
 do
     printf "testing ${TEST_NAME[$i]}...\t"
-    ${COMPILE_FLAGS} ${FT_SRCS[$i]} ; ./a.out > yours.output
+    ${COMPILE_FLAGS} tester/${FT_SRCS[$i]} ; ./a.out > yours.output
     # leaks -atExit -- ./a.out | grep "total leaked bytes."
-    ${COMPILE_FLAGS} ${STD_SRCS[$i]} ; ./a.out > std.output
+    ${COMPILE_FLAGS} tester/${STD_SRCS[$i]} ; ./a.out > std.output
     if cmp -s yours.output std.output; then
         echo "${TEXT_COLOR_GREEN}OK${TEXT_COLOR_DEFAULT}"
     else
-       echo "${TEXT_COLOR_RED}KO${TEXT_COLOR_DEFAULT}" ; mv yours.output ${TEST_NAME[$i]}_yours.output ; mv std.output ${TEST_NAME[$i]}_std.output
+       echo "${TEXT_COLOR_RED}KO${TEXT_COLOR_DEFAULT}" ; mv yours.output "${TEST_NAME[$i]}"_yours.output ; mv std.output "${TEST_NAME[$i]}"_std.output
     fi
 done
     rm a.out std.output yours.output

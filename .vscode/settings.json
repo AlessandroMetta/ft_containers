@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "map": "cpp",
+        "utility": "cpp",
+        "type_traits": "cpp",
+        "iterator": "cpp"
+    }
+}
