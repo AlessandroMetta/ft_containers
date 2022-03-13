@@ -3,6 +3,10 @@
         "map": "cpp",
         "utility": "cpp",
         "type_traits": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "memory": "cpp",
+        "functional": "cpp",
+        "initializer_list": "cpp",
+        "__cxx_version": "cpp"
     }
 }
