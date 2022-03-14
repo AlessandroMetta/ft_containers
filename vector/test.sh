@@ -2,8 +2,8 @@
 TEXT_COLOR_RED="\033[1;31m"
 TEXT_COLOR_GREEN="\033[1;32m"
 TEXT_COLOR_DEFAULT="\033[0m"
-COMPILE_FLAGS="c++ -Wall -Wextra -Werror -std=c++98"
-# COMPILE_FLAGS="c++ -Wall -Wextra -Werror -std=c++98 -fsanitize=address -static-libsan -g"
+# COMPILE_FLAGS="c++ -Wall -Wextra -Werror -std=c++98"
+COMPILE_FLAGS="c++ -Wall -Wextra -Werror -std=c++98 -fsanitize=address -static-libsan -g"
 
 TEST_NAME=(\
     "constructors" \

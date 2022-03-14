@@ -176,9 +176,7 @@ namespace ft
 
 		vector & operator=(const vector& x)
 		{
-			if (_data != 0) _alloc.deallocate(_data, _size);
 			_alloc = x._alloc;
-			_data = _alloc.allocate( 0 );
 			assign(x.begin(), x.end());
 			return *this;
 		};
