@@ -113,14 +113,8 @@ class RBTree
 			nuovo_nodo->minore = nullptr;		//	inizializzazione del ramo sinistro del nuovo nodo a NULL
 			nuovo_nodo->maggiore = nullptr;		//	inizializzazione del ramo destro del nuovo nodo a NULL
 			nuovo_nodo->dato = val;				//	inizializzazione del valore del nuovo nodo a val
-			nuovo_nodo->colore = ROSSO;				//	inizializzazione del colore del nuovo nodo a ROSSO
+			nuovo_nodo->colore = ROSSO;			//	inizializzazione del colore del nuovo nodo a ROSSO
 
-			if (primo_nodo == nullptr)			// se non esistono ancora nodi
-			{
-				primo_nodo = nuovo_nodo;		// inizializza al nuovo nodo l'albero
-				primo_nodo->colore = NERO;			// assegna al nodo il colore nero
-				return nuovo_nodo;
-			}
 			// se ho trovato il primo nodo occupato, vado alla ricerca del primo nodo libero
 			Node* nodo_di_ricerca = primo_nodo;
 			Node* nodo_corrente = nullptr;		
@@ -146,10 +140,10 @@ class RBTree
 		{
 			while (figlio->padre->colore == 1)
 			{
-				if (figlio->padre == figlio->padre->padre->minore)
+				if (figlio->padre->padre->minore && figlio->padre == figlio->padre->padre->minore)
 				{
-					std::cout << figlio->padre->padre << "\n";
-					if(figlio->padre->padre->maggiore->colore == ROSSO) // problema nel caso specifico mio, non esiste lo zio
+					// std::cout << figlio->padre->padre << "\n";
+					if(figlio->padre->padre->maggiore && figlio->padre->padre->maggiore->colore == ROSSO) // problema nel caso specifico mio, non esiste lo zio
 					{
 						figlio->padre->padre->maggiore->colore = NERO;
 						figlio->padre->padre->minore->colore = NERO;
@@ -158,7 +152,7 @@ class RBTree
 					}
 					else
 					{
-						if (figlio == figlio->padre->maggiore)
+						if (figlio->padre->maggiore && figlio == figlio->padre->maggiore)
 						{
 							figlio = figlio->padre;
 							left_rotation(figlio);
@@ -170,7 +164,7 @@ class RBTree
 				}
 				else
 				{
-					if (figlio->padre->padre->minore->colore == ROSSO)
+					if (figlio->padre->padre->minore && figlio->padre->padre->minore->colore == ROSSO)
 					{
 						figlio->padre->padre->minore->colore = NERO;
 						figlio->padre->colore = NERO;
@@ -179,7 +173,7 @@ class RBTree
 					}
 					else
 					{
-						if (figlio == figlio->padre->minore)
+						if (figlio->padre->minore && figlio == figlio->padre->minore)
 						{
 							figlio = figlio->padre;
 							right_rotation(figlio);
@@ -198,8 +192,29 @@ class RBTree
 
 	public:
 		RBTree() : primo_nodo(nullptr) {};
-		~RBTree() {};
+
+		~RBTree()
+		{
+			delete_all(primo_nodo);
+			/*if (primo_nodo)
+			{
+				if (primo_nodo->minore)
+					delete_all(primo_nodo->minore);
+				if (primo_nodo->maggiore)
+					delete_all(primo_nodo->maggiore);
+			delete primo_nodo;
+			}*/
+		};
 		
+		void delete_all(Node* nodo)
+		{
+			if (nodo->minore)
+				delete_all(nodo->minore);
+			if (nodo->maggiore) 
+				delete_all(nodo->maggiore);
+			delete nodo;
+		};
+
 		void insert(int val)
 		{
 			Node* nuovo_figlio = normal_insert(val);
@@ -227,13 +242,14 @@ int main()
 
 	Albero.insert(5);
 	Albero.insert(3);
-	Albero.printTree();
-	std::cout<<"~~~~~~~~~~~~~~~~~~~~\n";
+	// Albero.printTree();
+	// std::cout<<"~~~~~~~~~~~~~~~~~~~~\n";
 	Albero.insert(2);
 	// Albero.insert(7);
-	// Albero.insert(8);
 	// Albero.insert(4);
 	// Albero.insert(6);
+	// Albero.insert(8);
+	// Albero.insert(9);
 	std::cout<<"~~~~~~~~~FINAL~~~~~~~~~~\n";
 	Albero.printTree();
 }
