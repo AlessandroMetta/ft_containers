@@ -50,10 +50,11 @@ class RBTree
 			int					dato;
 		};
 		Node* primo_nodo;
+		Node* NULL_LEAF;
 
 		void printHelper(Node* primo_nodo, std::string indent, bool last)
 		{
-			if (primo_nodo != nullptr) {
+			if (primo_nodo != NULL_LEAF) {
 				std::cout << indent;
 			if (last) {
 				std::cout << "R----";
@@ -63,62 +64,61 @@ class RBTree
 				indent += "|  ";
 			}
 
-			std::string sColor = primo_nodo->colore ? "RED" : "BLACK";
-			std::cout << primo_nodo->dato << "(" << sColor << ")" << std::endl;
+			std::string scolore = primo_nodo->colore ? "RED" : "BLACK";
+			std::cout << primo_nodo->dato << "(" << scolore << ")" << std::endl;
 			printHelper(primo_nodo->minore, indent, false);
 			printHelper(primo_nodo->maggiore, indent, true);
 			}
 		};
 
-		void left_rotation(Node* nodo_figlio)
+		void left_rotation(Node* figlio)
 		{
-			Node* nodo_padre = nodo_figlio->padre;
-			Node* nodo_nonno = nodo_padre->padre;
-			nodo_padre->maggiore = nodo_figlio->minore;
-			if (nodo_figlio->minore != nullptr)
-				nodo_figlio->minore->padre = nodo_padre;
-			nodo_figlio->padre = nodo_nonno;
-			if (nodo_nonno == nullptr)
-				primo_nodo = nodo_figlio;
-			else if (nodo_padre == nodo_nonno->minore)
-				nodo_nonno->minore = nodo_figlio;
+			Node* fratello = figlio->maggiore;
+			figlio->maggiore = fratello->minore;
+			if (fratello->minore != NULL_LEAF)
+				fratello->minore->padre = figlio;
+			fratello->padre = figlio->padre;
+			if (figlio->padre == nullptr)
+				this->primo_nodo = fratello;
+			else if (figlio == figlio->padre->maggiore)
+				figlio->padre->maggiore = fratello;
 			else
-				nodo_nonno->maggiore = nodo_figlio;
-			nodo_figlio->minore = nodo_padre;
-			nodo_padre->padre = nodo_figlio;
+				figlio->padre->minore = fratello;
+			fratello->minore = figlio;
+			figlio->padre = fratello;
+
 		};
 
-		void right_rotation(Node* nodo_figlio)
+		void right_rotation(Node* figlio)
 		{
-			Node* nodo_padre = nodo_figlio->padre;
-			Node* nodo_nonno = nodo_padre->padre;
-			nodo_padre->minore = nodo_figlio->maggiore;
-			if (nodo_figlio->maggiore != nullptr)
-				nodo_figlio->maggiore->padre = nodo_padre;
-			nodo_figlio->padre = nodo_nonno;
-			if (nodo_nonno == nullptr)
-				primo_nodo = nodo_figlio;
-			else if (nodo_padre == nodo_nonno->maggiore)
-				nodo_nonno->maggiore = nodo_figlio;
+			Node* fratello = figlio->minore;
+			figlio->minore = fratello->maggiore;
+			if (fratello->maggiore != NULL_LEAF)
+				fratello->maggiore->padre = figlio;
+			fratello->padre = figlio->padre;
+			if (figlio->padre == nullptr)
+				this->primo_nodo = fratello;
+			else if (figlio == figlio->padre->maggiore)
+				figlio->padre->maggiore = fratello;
 			else
-				nodo_nonno->minore = nodo_figlio;
-			nodo_figlio->maggiore = nodo_padre;
-			nodo_padre->padre = nodo_figlio;
+				figlio->padre->minore = fratello;
+			fratello->maggiore = figlio;
+			figlio->padre = fratello;
 		};
 
 		Node* normal_insert(int val)
 		{
 			Node* nuovo_nodo = new Node;		//	allocazione del nuovo nodo
 			nuovo_nodo->padre = nullptr;		//	inizializzazione del ramo destro del nuovo nodo a NULL
-			nuovo_nodo->minore = nullptr;		//	inizializzazione del ramo sinistro del nuovo nodo a NULL
-			nuovo_nodo->maggiore = nullptr;		//	inizializzazione del ramo destro del nuovo nodo a NULL
+			nuovo_nodo->minore = NULL_LEAF;		//	inizializzazione del ramo sinistro del nuovo nodo a NULL
+			nuovo_nodo->maggiore = NULL_LEAF;		//	inizializzazione del ramo destro del nuovo nodo a NULL
 			nuovo_nodo->dato = val;				//	inizializzazione del valore del nuovo nodo a val
-			nuovo_nodo->colore = ROSSO;			//	inizializzazione del colore del nuovo nodo a ROSSO
+			nuovo_nodo->colore = ROSSO;			//	inizializzazione del coloree del nuovo nodo a ROSSO
 
 			// se ho trovato il primo nodo occupato, vado alla ricerca del primo nodo libero
 			Node* nodo_di_ricerca = primo_nodo;
 			Node* nodo_corrente = nullptr;		
-			while (nodo_di_ricerca != nullptr)
+			while (nodo_di_ricerca != NULL_LEAF)
 			{
 				nodo_corrente = nodo_di_ricerca;
 				if (nodo_di_ricerca->dato > nuovo_nodo->dato)
@@ -140,10 +140,9 @@ class RBTree
 		{
 			while (figlio->padre->colore == 1)
 			{
-				if (figlio->padre->padre->minore && figlio->padre == figlio->padre->padre->minore)
+				if (figlio->padre == figlio->padre->padre->minore)
 				{
-					// std::cout << figlio->padre->padre << "\n";
-					if(figlio->padre->padre->maggiore && figlio->padre->padre->maggiore->colore == ROSSO) // problema nel caso specifico mio, non esiste lo zio
+					if(figlio->padre->padre->maggiore->colore == ROSSO)
 					{
 						figlio->padre->padre->maggiore->colore = NERO;
 						figlio->padre->padre->minore->colore = NERO;
@@ -152,7 +151,7 @@ class RBTree
 					}
 					else
 					{
-						if (figlio->padre->maggiore && figlio == figlio->padre->maggiore)
+						if (figlio == figlio->padre->maggiore)
 						{
 							figlio = figlio->padre;
 							left_rotation(figlio);
@@ -164,7 +163,7 @@ class RBTree
 				}
 				else
 				{
-					if (figlio->padre->padre->minore && figlio->padre->padre->minore->colore == ROSSO)
+					if (figlio->padre->padre->minore->colore == ROSSO)
 					{
 						figlio->padre->padre->minore->colore = NERO;
 						figlio->padre->colore = NERO;
@@ -173,7 +172,7 @@ class RBTree
 					}
 					else
 					{
-						if (figlio->padre->minore && figlio == figlio->padre->minore)
+						if (figlio == figlio->padre->minore)
 						{
 							figlio = figlio->padre;
 							right_rotation(figlio);
@@ -189,22 +188,17 @@ class RBTree
 			primo_nodo->colore = NERO;
 		};
 
-
 	public:
-		RBTree() : primo_nodo(nullptr) {};
-
-		~RBTree()
+		RBTree()
 		{
-			delete_all(primo_nodo);
-			/*if (primo_nodo)
-			{
-				if (primo_nodo->minore)
-					delete_all(primo_nodo->minore);
-				if (primo_nodo->maggiore)
-					delete_all(primo_nodo->maggiore);
-			delete primo_nodo;
-			}*/
+			NULL_LEAF = new Node;
+			NULL_LEAF->colore = NERO;
+			NULL_LEAF->minore = nullptr;
+			NULL_LEAF->maggiore = nullptr;
+			primo_nodo = NULL_LEAF;
 		};
+
+		~RBTree() { /*delete_all(primo_nodo);*/ };
 		
 		void delete_all(Node* nodo)
 		{
@@ -214,6 +208,15 @@ class RBTree
 				delete_all(nodo->maggiore);
 			delete nodo;
 		};
+
+/*
+L'inserzione è composta principalmente da tre fasi:
+	- l'inizializzazione del primo nodo e il suo posizionamento all'interno dell'albero
+	- prima di proseguire con il bilanciamento, distinguiamo i casi in cui il padre o il nonno non puntino a nulla
+	- ribilanciamento;
+		caso 1: il padre del nodo aggiunto è rosso.
+			caso 1.1: controllo sul nodo zio, se è rosso  
+*/
 
 		void insert(int val)
 		{
@@ -240,16 +243,17 @@ int main()
 {
 	RBTree Albero;
 
-	Albero.insert(5);
-	Albero.insert(3);
 	// Albero.printTree();
 	// std::cout<<"~~~~~~~~~~~~~~~~~~~~\n";
+	Albero.insert(5);
+	Albero.insert(3);
 	Albero.insert(2);
-	// Albero.insert(7);
-	// Albero.insert(4);
-	// Albero.insert(6);
-	// Albero.insert(8);
-	// Albero.insert(9);
+	Albero.insert(4);
+	Albero.insert(7);
+	Albero.insert(6);
+	Albero.insert(8);
+	Albero.insert(9);
+	Albero.insert(1);
 	std::cout<<"~~~~~~~~~FINAL~~~~~~~~~~\n";
 	Albero.printTree();
 }
