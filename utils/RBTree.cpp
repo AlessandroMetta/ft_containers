@@ -198,13 +198,17 @@ class RBTree
 			primo_nodo = NULL_LEAF;
 		};
 
-		~RBTree() { /*delete_all(primo_nodo);*/ };
+		~RBTree() 
+		{
+			delete_all(primo_nodo);
+			delete NULL_LEAF;
+		};
 		
 		void delete_all(Node* nodo)
 		{
-			if (nodo->minore)
+			if (nodo->minore != NULL_LEAF)
 				delete_all(nodo->minore);
-			if (nodo->maggiore) 
+			if (nodo->maggiore != NULL_LEAF) 
 				delete_all(nodo->maggiore);
 			delete nodo;
 		};
