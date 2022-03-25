@@ -1,6 +1,8 @@
 #ifndef __BSTREE_HPP__
 # define __BSTREE_HPP__
 
+#include <memory>
+
 template <class T>
 struct Node
 {
@@ -13,13 +15,15 @@ struct Node
 	Node( T key ) : k( key ), p( NULL ), r( NULL ), l( NULL ) {};
 };
 
-template <class T>
-class BSTree{
+template <class T, class Allocator = std::allocator< Node<T> > >
+class BSTree
+{
 	public:
 		typedef Node<T>* NodePtr;
 
 	private:
 		NodePtr head;
+		Allocator alloc;
 
 		void delete_all_nodes( NodePtr n )
 		{
@@ -29,7 +33,9 @@ class BSTree{
 					delete_all_nodes(n->l);
 				if (n->r != NULL)
 					delete_all_nodes(n->r);
-				delete n;
+				alloc.destroy(n);
+				alloc.deallocate(n, 1);
+				n = NULL;
 			}
 		}
 
@@ -50,12 +56,13 @@ class BSTree{
 
 	public:
 		BSTree() {
-			head = new Node<T>(0);
+			head = alloc.allocate( 1 );
+			alloc.construct(head, 0);
 		};
 		
 		~BSTree() {
 			delete_all_nodes(head->r);
-			delete head;
+			alloc.deallocate(head, 1);
 		};
 
 		void treeprint() { printBT("", head->r, false); }
@@ -77,6 +84,7 @@ class BSTree{
 		{
 			NodePtr n = head->r;
 			NodePtr p = head;
+			NodePtr m;
 			while (n != NULL)
 			{
 				p = n;
@@ -85,7 +93,8 @@ class BSTree{
 				else
 					n = n->r;
 			}
-			NodePtr m = new Node<T>(key);
+			m = alloc.allocate( 1 );
+			alloc.construct(m, key);
 			if (head->r == NULL)
 			{
 				head->r = m;
@@ -104,6 +113,7 @@ class BSTree{
 			NodePtr t;
 			NodePtr c;
 			NodePtr p = head;
+
 			while (key != n->k)
 			{
 				p = n;
@@ -132,7 +142,10 @@ class BSTree{
 			}
 			if (p != head)
 				p = t->p;
-			delete t;
+
+			alloc.destroy(t);
+			alloc.deallocate(t, 1);
+
 			if (!p)
 				return ;
 			if (key < p->k)
