@@ -6,10 +6,10 @@ insertion on value
         else (is red), check on the uncle color
             if is red, you have to flip the colors of G, U and P
             else is black, check the paths
-                if N is P->left_child and P is G->left_child, do a right_rotation on P
-                if N is P->left_child and P is G->right_child, do a right_rotation on G
-                if N is P->right_child and P is G->left_child, do a left_rotation on G
-                if N is P->right_child and P is G->right_child, do a left_rotation on P
+                if N is P->left_child and P is G->left_child, do a right_rotation
+                if N is P->left_child and P is G->right_child, do a right_rotation
+                if N is P->right_child and P is G->left_child, do a left_rotation
+                if N is P->right_child and P is G->right_child, do a left_rotation
 
 delete on value
     search for value in the tree
@@ -19,7 +19,7 @@ delete on value
             set the parent of the deleted node to left child of the deleted node 
             (COLOR?)
         if has only the right child, 
-            set the parent of the deleted node to left child of the deleted node 
+            set the parent of the deleted node to right child of the deleted node 
             (COLOR?)
         if N has both the children,
             search for the largest node in the left subtree
