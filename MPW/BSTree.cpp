@@ -4,18 +4,22 @@
 int main()
 {
 
-/*
+
 	BSTree<int> tree;
 	
-	tree.BSTree_insertion(5);
-	tree.BSTree_insertion(2);
-	tree.BSTree_insertion(1);
-	tree.BSTree_insertion(3);
-	tree.BSTree_insertion(7);
-	tree.BSTree_insertion(6);
-	tree.BSTree_insertion(8);
-*/
+	tree.insertion(5);
+	tree.insertion(2);
+	tree.insertion(1);
+	tree.insertion(3);
+	tree.insertion(7);
+	tree.insertion(6);
+	tree.insertion(8);
 
+	tree.treeprint();
+	std::cout << "\ndeletion of 5\n";
+	tree.deletion(5);
+
+/*
 	BSTree<char> tree;
 
 	tree.insertion('E');
@@ -31,6 +35,6 @@ int main()
 	tree.treeprint();
 	std::cout << "\ndeletion of E\n";
 	tree.deletion('E');
-
+*/
 	tree.treeprint();
 }

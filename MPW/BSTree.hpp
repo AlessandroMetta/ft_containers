@@ -6,13 +6,13 @@
 template <class T>
 struct Node
 {
-	T	k;
+	T	key;
 	
-	struct Node * p;
-	struct Node * r;
-	struct Node * l;
+	struct Node * parent;
+	struct Node * right;
+	struct Node * left;
 
-	Node( T key ) : k( key ), p( NULL ), r( NULL ), l( NULL ) {};
+	Node( T key ) : key( key ), parent( NULL ), right( NULL ), left( NULL ) {};
 };
 
 template <class T, class Allocator = std::allocator< Node<T> > >
@@ -29,10 +29,10 @@ class BSTree
 		{
 			if (n)
 			{
-				if (n->l != NULL)
-					delete_all_nodes(n->l);
-				if (n->r != NULL)
-					delete_all_nodes(n->r);
+				if (n->left != NULL)
+					delete_all_nodes(n->left);
+				if (n->right != NULL)
+					delete_all_nodes(n->right);
 				alloc.destroy(n);
 				alloc.deallocate(n, 1);
 				n = NULL;
@@ -45,12 +45,12 @@ class BSTree
 			{
 				std::cout << prefix;
 
-				std::cout << (isLeft && n->p->r ? "├──" : "└──" );
+				std::cout << (isLeft ? "├──" : "└──" );
 
-				std::cout << n->k << std::endl;
+				std::cout << n->key << std::endl;
 
-				printBT( prefix + (isLeft && n->p->r ? "│  " : "   "), n->l, true);
-				printBT( prefix + (isLeft && n->p->r ? "│  " : "   "), n->r, false);
+				printBT( prefix + (isLeft ? "│  " : "   "), n->left, true);
+				printBT( prefix + (isLeft ? "│  " : "   "), n->right, false);
 			}
 		}
 
@@ -61,97 +61,98 @@ class BSTree
 		};
 		
 		~BSTree() {
-			delete_all_nodes(head->r);
+			delete_all_nodes(head->right);
 			alloc.deallocate(head, 1);
 		};
 
-		void treeprint() { printBT("", head->r, false); }
+		void treeprint() { printBT("", head->right, false); }
 
 		NodePtr search(T key)
 		{
-			NodePtr n = head->r;
-			while(n != NULL || n->k != key)
+			NodePtr n = head->right;
+			while(n != NULL || n->key != key)
 			{
-				if (key < n->k)
-					n = n->l;
+				if (key < n->key)
+					n = n->left;
 				else
-					n = n->r;
+					n = n->right;
 			}
 			return n;
 		}
 
 		void insertion(T key)
 		{
-			NodePtr n = head->r;
+			NodePtr n = head->right;
 			NodePtr p = head;
 			NodePtr m;
 			while (n != NULL)
 			{
 				p = n;
-				if (key < n->k)
-					n = n->l;
+				if (key < n->key)
+					n = n->left;
 				else
-					n = n->r;
+					n = n->right;
 			}
 			m = alloc.allocate( 1 );
 			alloc.construct(m, key);
-			if (head->r == NULL)
+			if (head->right == NULL)
 			{
-				head->r = m;
+				head->right = m;
 				return ;
 			}
-			else if (key < p->k)
-				p->l = m;
+			else if (key < p->key)
+				p->left = m;
 			else
-				p->r = m;
-			m->p = p;
+				p->right = m;
+			m->parent = p;
 		}
 
 		void deletion(T key)
 		{
-			NodePtr n = head->r;
+			NodePtr n = head->right;
 			NodePtr t;
 			NodePtr c;
 			NodePtr p = head;
 
-			while (key != n->k)
+			while (n != NULL && key != n->key)
 			{
 				p = n;
-				if (key < n->k)
-					n = n->l;
+				if (key < n->key)
+					n = n->left;
 				else
-					n = n->r;
+					n = n->right;
 			}
+			if (n == NULL) return ;
 			t = n;
-			if (t->r == NULL)
-				n = n->l;
-			else if (t->r->l == NULL)
+			if (t->right == NULL)
+				n = n->left;
+		else if (t->right->left == NULL)
 			{
-				n = n->r;
-				n->l = t->l;
+				n = n->right;
+				n->left = t->left;
 			}
 			else
 			{
-				c = n->r;
-				while (c->l->l != NULL)
-					c = c->l;
-				n = c->l;
-				c->l = n->r;
-				n->l = t->l;
-				n->r = t->r;
+				c = n->right;
+				while (c->left->left != NULL)
+					c = c->left;
+				n = c->left;
+				c->left = n->right;
+				n->left = t->left;
+				n->right = t->right;
 			}
 			if (p != head)
-				p = t->p;
+				p = t->parent;
 
 			alloc.destroy(t);
 			alloc.deallocate(t, 1);
 
 			if (!p)
 				return ;
-			if (key < p->k)
-				p->l = n;
+			if (key < p->key)
+				p->left = n;
 			else
-				p->r = n;
+				p->right = n;
 		}
 };
 
