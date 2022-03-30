@@ -1,5 +1,5 @@
-#ifndef __ITERATOR_TRAITS_HPP__
-# define __ITERATOR_TRAITS_HPP__
+#ifndef __ITERATOR_HPP__
+# define __ITERATOR_HPP__
 
 namespace ft {
     template< class Iter >
@@ -37,6 +37,33 @@ namespace ft {
     struct forward_iterator_tag : public input_iterator_tag { };
     struct bidirectional_iterator_tag : public forward_iterator_tag { };
     struct random_access_iterator_tag : public bidirectional_iterator_tag { };
+
+    template< class Iter >
+    class reverse_iterator
+    {
+    public:
+        typedef Iter iterator_type;
+        typedef typename ft::iterator_traits<Iter>::iterator_category iterator_category;
+        typedef typename ft::iterator_traits<Iter>::value_type value_type;
+        typedef typename ft::iterator_traits<Iter>::difference_type difference_type;
+        typedef typename ft::iterator_traits<Iter>::pointer pointer;
+        typedef typename ft::iterator_traits<Iter>::reference reference;
+
+        reverse_iterator() : base_iterator() {};
+        explicit reverse_iterator( iterator_type x ) : base_iterator( x ) {};
+        template< class U > 
+            reverse_iterator( const reverse_iterator<U>& other )
+            : base_iterator( x.base() ) {};
+
+        iterator_type base() const { return base_iterator; };
+
+        reference operator*() const { Iter tmp = current; return (*(--tmp)); };
+        pointer operator->() const { return std::addressof(operator*()); };
+
+    private:
+        iterator_type base_iterator;
+    };
+
 }
 
 #endif
