@@ -6,7 +6,8 @@
 #include <stdexcept>
 #include <iostream>
 
-// #include "../iterator.hpp"
+#include "../iterator/iterator.hpp"
+#include "../utils.hpp"
 
 namespace ft
 {
@@ -14,18 +15,18 @@ namespace ft
 	class vector
 	{
 	public:
-		typedef Allocator   allocator_type;
-		typedef std::size_t   size_type;
-		typedef std::ptrdiff_t   difference_type;
-		typedef T   value_type;
-		typedef T*   pointer;
-		typedef const T*   const_pointer;
-		typedef T&   reference;
-		typedef const T&   const_reference;
-		typedef ft::vector_iterator<T>   iterator;
-		typedef ft::const_vector_iterator<T>   const_iterator;
-		typedef ft::reverse_vector_iterator<T>   reverse_iterator;
-		typedef ft::const_reverse_vector_iterator<T>   const_reverse_iterator;
+		typedef	Allocator								allocator_type;
+		typedef	std::size_t								size_type;
+		typedef	std::ptrdiff_t							difference_type;
+		typedef	T										value_type;
+		typedef	T*										pointer;
+		typedef	const T*								const_pointer;
+		typedef	T&										reference;
+		typedef	const T&								const_reference;
+		typedef	pointer									iterator;
+		typedef	const_pointer							const_iterator;
+		typedef	ft::reverse_iterator<iterator>			reverse_iterator;
+		typedef	const ft::reverse_iterator<iterator>	const_reverse_iterator;
 	private:
 		pointer _data;
 		allocator_type _alloc;
@@ -62,9 +63,7 @@ namespace ft
 		// Copy constructor
 		vector( const vector& other )
 		: _data(0), _alloc(other._alloc), _capacity(0), _size(0)
-		{
-			this->operator=(other);
-		};
+		{ this->operator=(other); };
 
 		// Destructor
 		~vector() { _alloc.deallocate(_data, _capacity); };
@@ -152,11 +151,12 @@ namespace ft
 		allocator_type get_allocator () const { return _alloc; };
 
 		// MODIFIERS
-		void assign (iterator first, iterator last)
+		template <class InputIterator>
+ 		void assign (InputIterator first, InputIterator last)
 		{
 			size_type i = 0;
 			clear();
-			for(iterator it = first; it != last; it++)
+			for(InputIterator it = first; it != last; it++)
 				i++;
 			if ( _capacity < i )
 			{
@@ -223,7 +223,8 @@ namespace ft
 				position = insert(position, val);
 		};
 
-		void						insert (iterator position, iterator first, iterator last)
+		template <class InputIterator>
+    		void insert (iterator position, InputIterator first, InputIterator last)
 		{
 			for ( ; first != last; ++first)
 				position = insert(position, *first) + 1;
