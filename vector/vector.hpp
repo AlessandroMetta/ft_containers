@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "../iterator/iterator.hpp"
+#include "../iterator/random_access_iterator.hpp"
 #include "../utils.hpp"
 
 namespace ft
@@ -23,38 +24,32 @@ namespace ft
 		typedef	const T*								const_pointer;
 		typedef	T&										reference;
 		typedef	const T&								const_reference;
-		typedef	pointer									iterator;
-		typedef	const_pointer							const_iterator;
+		typedef	ft::random_access_iterator<T>			iterator;
+		typedef	ft::random_access_iterator<const T>		const_iterator;
 		typedef	ft::reverse_iterator<iterator>			reverse_iterator;
-		typedef	const ft::reverse_iterator<iterator>	const_reverse_iterator;
-	private:
-		pointer _data;
-		allocator_type _alloc;
-		size_type _capacity;
-		size_type _size;
+		typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+
 	public:
 		// Constructs an empty container with the given allocator alloc
-		explicit vector( const allocator_type& alloc = allocator_type() )
+		explicit vector (const allocator_type& alloc = allocator_type())
 		: _data(0), _alloc(alloc), _capacity(0), _size(0)
-		{
-			_data = _alloc.allocate( 0 );
-		};
+		{ _data = _alloc.allocate( 0 ); };
 
 		// Constructs the container with count copies of elements with value value
-		explicit vector( size_type count,
-			const value_type& value = value_type(),
-			const allocator_type& alloc = allocator_type())
+		explicit vector (size_type n, const value_type& val = value_type(),
+                 const allocator_type& alloc = allocator_type())
 			: _data(0), _alloc(alloc), _capacity(0), _size(0)
 		{
 			_data = _alloc.allocate( 0 );
-			assign(count, value);
+			assign(n, val);
 		};
 
 		// Constructs the container with the contents of the range [first, last).
-		template< class InputIt >
-		vector( InputIt first, InputIt last,
-			const Allocator& alloc = Allocator() ) 
-			: _data(0), _alloc(alloc), _capacity(0), _size(0)
+		template <class InputIterator>
+        	vector (InputIterator first, InputIterator last,
+                const allocator_type& alloc = allocator_type(),
+				typename std::enable_if<!std::is_integral<InputIterator>::value, int>::type* = 0)
+				: _data(0), _alloc(alloc), _capacity(0), _size(0)
 		{
 			_data = _alloc.allocate(0);
 			assign(first, last);
@@ -152,7 +147,8 @@ namespace ft
 
 		// MODIFIERS
 		template <class InputIterator>
- 		void assign (InputIterator first, InputIterator last)
+ 		void assign (InputIterator first,
+			InputIterator last, typename std::enable_if<!std::is_integral<InputIterator>::value, int>::type* = 0)
 		{
 			size_type i = 0;
 			clear();
@@ -224,7 +220,8 @@ namespace ft
 		};
 
 		template <class InputIterator>
-    		void insert (iterator position, InputIterator first, InputIterator last)
+    		void insert (iterator position, InputIterator first, InputIterator last,
+			typename std::enable_if<!std::is_integral<InputIterator>::value, int>::type* = 0)
 		{
 			for ( ; first != last; ++first)
 				position = insert(position, *first) + 1;
@@ -259,6 +256,12 @@ namespace ft
 				_alloc.destroy(_data + i);
 			_size = 0;
 		};
+
+	private:
+		pointer _data;
+		allocator_type _alloc;
+		size_type _capacity;
+		size_type _size;
 	};
 
 	// NON-MEMBER FUNCTION
