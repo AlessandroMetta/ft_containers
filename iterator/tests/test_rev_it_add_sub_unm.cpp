@@ -1,16 +1,18 @@
 #include <iostream>     // std::cout
-#include <vector>       // std::vector
+// #include <vector>       // std::vector
+#include "../../vector/vector.hpp"
 #include "../iterator.hpp"     // std::reverse_iterator
 
 int main () {
-  std::vector<int> myvector;
+  ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
-  typedef std::vector<int>::iterator iter_type;
+  typedef ft::vector<int>::iterator iter_type;
 
-  ft::reverse_iterator<iter_type> from(myvector.begin());
-  ft::reverse_iterator<iter_type> until(myvector.end());
+  ft::reverse_iterator<ft::vector<int>::iterator> from,until;
 
+  from = myvector.rbegin();
+  until = myvector.rend(); 
   std::cout << "myvector has " << (until-from) << " elements.\n";
 
 
