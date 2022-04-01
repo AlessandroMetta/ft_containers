@@ -1,16 +1,14 @@
-#include <iostream>     // std::cout
-#include <vector>       // std::vector
-
-// #include <iterator>     // std::reverse_iterator
-#include "../iterator.hpp"     // std::reverse_iterator
+#include <iostream>
+#include "../iterator.hpp"
+#include "../../vector/vector.hpp"
 
 int main () {
-  std::vector<int> myvector;
+  ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
-  typedef std::vector<int>::iterator iter_type;
+  typedef ft::vector<int>::iterator iter_type;
 
-  ft::reverse_iterator<iter_type> rev_i( myvector.begin() );
+  ft::reverse_iterator<iter_type> rev_i( myvector.rend() );
   ft::reverse_iterator<iter_type> rev_it( rev_i - 3 );
 
   std::cout << "The fourth element from the end is: " << *rev_it << '\n';

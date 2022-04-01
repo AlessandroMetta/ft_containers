@@ -95,7 +95,7 @@ namespace ft
 		iterator operator-- ( int )
 		{
 			iterator tmp = *this;
-			ptr++;
+			ptr--;
 			return tmp;
 		};
 

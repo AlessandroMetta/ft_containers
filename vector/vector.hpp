@@ -137,42 +137,42 @@ namespace ft
 		// ITERATORS FUNCTION
 		iterator begin()
 		{
-			return iterator(_data);
+			return iterator( &_data[0] );
 		};
 
 		const_iterator begin() const
 		{
-			return const_iterator(_data);
+			return const_iterator( &_data[0] );
 		};
 
 		iterator end()
 		{
-			return iterator(_data + _size);
+			return iterator( &_data[size()] );
 		};
 
 		const_iterator end() const
 		{
-			return const_iterator(_data + _size);
+			return const_iterator( &_data[size()] );
 		};
 
 		reverse_iterator rbegin()
 		{
-			return reverse_iterator(_data);
+			return reverse_iterator( end() );
 		};
 
 		const_reverse_iterator rbegin() const
 		{
-			return const_reverse_iterator(_data);
+			return const_reverse_iterator( end() );
 		};
 
 		reverse_iterator rend()
 		{
-			return reverse_iterator(_data + _size);
+			return reverse_iterator( begin() );
 		};
 
 		const_reverse_iterator rend() const
 		{
-			return const_reverse_iterator(_data + _size);
+			return const_reverse_iterator( begin() );
 		};
 
 		// ELEMENT ACCESS

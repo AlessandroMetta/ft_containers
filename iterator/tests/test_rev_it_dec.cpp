@@ -1,15 +1,16 @@
 // reverse_iterator::operator-- example
 #include <iostream>     // std::cout
-#include <vector>       // std::vector
+// #include <vector>       // std::vector
+#include "../../vector/vector.hpp"
 
 // #include <iterator>     // std::reverse_iterator
 #include "../iterator.hpp"     // std::reverse_iterator
 
 int main () {
-  std::vector<int> myvector;
+  ft::vector<int> myvector;
   for (int i=0; i<10; i++) myvector.push_back(i);
 
-  typedef std::vector<int>::iterator iter_type;
+  typedef ft::vector<int>::iterator iter_type;
 
   ft::reverse_iterator<iter_type> rev_begin (myvector.end());
   ft::reverse_iterator<iter_type> rev_end (myvector.begin());
