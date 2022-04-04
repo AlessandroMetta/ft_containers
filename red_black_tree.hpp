@@ -1,6 +1,9 @@
 #ifndef __RED_BLACK_TREE_HPP__
 # define __RED_BLACK_TREE_HPP__
 
+#include <memory>
+#include <iostream>
+
 #define BLACK 0
 #define RED 1
 
@@ -15,28 +18,163 @@ namespace ft
         T value;
         bool color;
 
-        Node(val) : parent(NULL), left(NULL), right(NULL), value(val), color(RED) {}
+        Node(T val) : parent(NULL), left(NULL), right(NULL), value(val), color(RED) {}
     };
     
-    template < class T >
+    template < class T , class Allocator = std::allocator< Node<T> > >
     class red_black_tree
     {
-    private:
-        Node * root;
     public:
+        typedef Node<T> * NodePtr;
+    
+    private: //private member functions
 
-        red_black_tree(/* args */);
-        ~red_black_tree();
+        void printHelper(NodePtr root, std::string indent, bool last) {
+            // print the tree structure on the screen
+            if (root != NULL) {
+            std::cout<<indent;
+            if (last) {
+                std::cout<<"R----";
+                indent += "     ";
+            } else {
+                std::cout<<"L----";
+                indent += "|    ";
+            }
+                
+            std::string sColor = root->color?"RED":"BLACK";
+            std::cout<<root->value<<"("<<sColor<<")"<<std::endl;
+            printHelper(root->left, indent, false);
+            printHelper(root->right, indent, true);
+            }
+        }
 
-        bool isRed(Node * k)
+        void deleteAllNodes(NodePtr node)
+        {
+            if (node)
+            {
+                if (node->left)
+                    deleteAllNodes(node->left);
+                if (node->right)
+                    deleteAllNodes(node->right);
+                a.destroy(node);
+                a.deallocate(node, 1);
+            }
+        }
+
+        bool isRed(NodePtr k)
         {
             if (!k) return BLACK;
             return k->color == RED;
         };
 
-        balance_after_insetion(T k)
+        NodePtr minimum(NodePtr node) {
+            while (node->left != NULL) {
+                node = node->left;
+            }
+            return node;
+        }
+
+        void left_rotate(NodePtr x) {
+            NodePtr y = x->right;
+            x->right = y->left;
+            if (y->left != NULL) {
+                y->left->parent = x;
+            }
+            y->parent = x->parent;
+            if (x->parent == nullptr) {
+                this->root = y;
+            } else if (x == x->parent->left) {
+                x->parent->left = y;
+            } else {
+                x->parent->right = y;
+            }
+            y->left = x;
+            x->parent = y;
+        }
+
+        void right_rotate(NodePtr x) {
+            NodePtr y = x->left;
+            x->left = y->right;
+            if (y->right != NULL) {
+                y->right->parent = x;
+            }
+            y->parent = x->parent;
+            if (x->parent == nullptr) {
+                this->root = y;
+            } else if (x == x->parent->right) {
+                x->parent->right = y;
+            } else {
+                x->parent->left = y;
+            }
+            y->right = x;
+            x->parent = y;
+        }
+
+        void fixOrphan(NodePtr dead, NodePtr orphan)
         {
-            Node * u;
+            if (dead->parent == NULL)
+                root = orphan;
+            else if (dead == dead->parent->left)
+                dead->parent->left = orphan;
+            else
+                dead->parent->right = orphan;
+            if (orphan)
+                orphan->parent = dead->parent;
+        }
+
+        void DeleteNode(NodePtr node, T z)
+        {
+            NodePtr toDelete = NULL;
+            NodePtr toBalance = NULL;
+            while (node != NULL)
+            {
+                if (z == node->value)
+                    toDelete = node;
+                if(z < node->value)
+                    node = node->left;
+                else
+                    node = node->right;
+            }
+            if  (toDelete == NULL)
+                return ;
+            bool original_color = toDelete->color;
+            if (toDelete->left == NULL)
+            {
+                toBalance = toDelete->right;
+                fixOrphan(toDelete, toDelete->right);
+            }
+            else if (toDelete->right == NULL)
+            {
+                toBalance = toDelete->left;
+                fixOrphan(toDelete, toDelete->left);
+            }
+            else
+            {
+                NodePtr tmp = minimum(toDelete->right);
+                original_color = tmp->color;
+                toBalance = tmp->right;
+                if (tmp->parent == toDelete)
+                    toBalance->parent = tmp;
+                else
+                {
+                    fixOrphan(tmp, tmp->right);
+                    tmp->right = toDelete->right;
+                    tmp->right->parent = tmp;
+                }
+                fixOrphan(toDelete, tmp);
+                tmp->left = toDelete->left;
+                tmp->left->parent = tmp;
+                tmp->color = toDelete->color;
+            }
+            a.destroy(toDelete);
+            a.deallocate(toDelete, 1);
+            if (original_color == BLACK && toBalance != NULL)
+                balance_after_deletion(toBalance);
+        }
+
+        void balance_after_insetion(NodePtr k)
+        {
+            NodePtr u;
             while (isRed(k->parent))
             {
                 if (k->parent == k->parent->parent->right)
@@ -88,12 +226,13 @@ namespace ft
 				    break;
 			    }
             }
-            root.color = BLACK;
+            root->color = BLACK;
         };
-        balance_after_deletion(T x)
+
+        void balance_after_deletion(NodePtr x)
         {
-            Node * s;
-            while (x != root && x->color != BLACK)
+            NodePtr s;
+            while (x != root && x->color == BLACK)
             {
                 if(x == x->parent->left)
                 {
@@ -105,14 +244,15 @@ namespace ft
                         left_rotate(x->parent);
                         s = x->parent->right;
                     }
-                    if (!isRed(s->left) && !isRed(s->right))
+                    if (((s->left && !isRed(s->left)) || !s->left)
+                        && ((s->right && !isRed(s->right)) || !s->right))
                     {
                         s->color = RED;
                         x = x->parent;
                     }
                     else
                     {
-                        if (!isRed(s->right))
+                        if ((s->right && !isRed(s->right)) || !s->right)
                         {
                             s->color = RED;
                             s->left->color = BLACK;
@@ -121,6 +261,7 @@ namespace ft
                         }
                         s->color = x->parent->color;
                         x->parent->color = BLACK;
+                        if (s->right)
                         s->right->color = BLACK;
                         left_rotate(x->parent);
                         x = root;
@@ -136,14 +277,15 @@ namespace ft
                         right_rotate(x->parent);
                         s = x->parent->left;
                     }
-                    if (!isRed(s->left) && !isRed(s->right))
+                    if (((s->left && !isRed(s->left)) || !s->left)
+                        && ((s->right && !isRed(s->right)) || !s->right))
                     {
                         s->color = RED;
                         x = x->parent;
                     }
                     else
                     {
-                        if (!isRed(s->left))
+                        if ((s->left && !isRed(s->left)) || !s->left)
                         {
                             s->color = RED;
                             s->right->color = BLACK;
@@ -152,6 +294,7 @@ namespace ft
                         }
                         s->color = x->parent->color;
                         x->parent->color = BLACK;
+                        if (s->left)
                         s->left->color = BLACK;
                         right_rotate(x->parent);
                         x = root;
@@ -160,6 +303,53 @@ namespace ft
             }
             x->color = BLACK;
         };
+
+    public:
+
+        red_black_tree(const Allocator& alloc = Allocator()) : root(NULL), a(alloc) {};
+        ~red_black_tree()
+        {
+            deleteAllNodes(root);
+        };
+
+        void insertion(T z)
+        {
+            NodePtr newNode = a.allocate( 1 );
+            a.construct( newNode, Node<T>(z) );
+            NodePtr father = NULL;
+            NodePtr search = root;
+            while (search != NULL)
+            {
+                father = search;
+                if(z < search->value)
+                    search = search->left;
+                else
+                    search = search->right;
+            }
+            newNode->parent = father;
+            if (father == NULL)
+                root = newNode;
+            else if(z < father->value)
+                father->left = newNode;
+            else
+                father->right = newNode;
+            balance_after_insetion(newNode);
+        }
+
+        void deletion(T z)
+        {
+            DeleteNode(root, z);
+        }
+
+        void prettyPrint() {
+	    if (root) {
+    		printHelper(this->root, "", true);
+	    }
+	}
+    
+    private:
+        NodePtr root;
+        Allocator a;
     };
     
 } // namespace ft

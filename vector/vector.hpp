@@ -68,6 +68,8 @@ namespace ft
 		// Destructor
 		~vector()
 		{
+			for (size_type i = 0; i < _capacity; i++)
+				_alloc.destroy(_data + i);
 			_alloc.deallocate(_data, _capacity);
 		};
 
@@ -106,6 +108,8 @@ namespace ft
 				for (size_type i = 0; i < n; i++)
 					tmp[i] = _data[i];
 			}
+			for (size_type i = 0; i < _capacity; i++)
+				_alloc.destroy(_data + i);
 			_alloc.deallocate(_data, _capacity);
 			_size = n;
 			_data = tmp;
@@ -128,6 +132,8 @@ namespace ft
 				pointer tmp = _alloc.allocate( n );
 				for (size_type i = 0; i < _capacity; i++)
 					tmp[i] = _data[i];
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.destroy(_data + i);
 				_alloc.deallocate(_data, _capacity);
 				_capacity = n;
 				_data = tmp;
@@ -239,6 +245,8 @@ namespace ft
 				i++;
 			if ( _capacity < i )
 			{
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.destroy(_data + i);
 				_alloc.deallocate(_data, _capacity);
 				_data = _alloc.allocate( i );
 				_capacity = i;
@@ -257,6 +265,8 @@ namespace ft
 			}
 			else
 			{
+				for (size_type i = 0; i < _size; i++)
+					_alloc.destroy(_data + i);
 				_alloc.deallocate(_data, _size);
 				_capacity = n;
 				_size = n;
