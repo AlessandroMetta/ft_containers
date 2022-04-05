@@ -2,14 +2,16 @@
 
 int main()
 {
-    ft::RBTree< ft::pair<std::string, std::string> > tree;
-    tree.insertion(ft::make_pair("ciao", "saluto comune"));
-    tree.insertion(ft::make_pair("mazzo", "saluto comune"));
-    tree.insertion(ft::make_pair("albero", "saluto comune"));
-    tree.insertion(ft::make_pair("betulla", "saluto comune"));
-    tree.insertion(ft::make_pair("abecedario", "saluto comune"));
-    tree.insertion(ft::make_pair("libellula", "saluto comune"));
-    tree.insertion(ft::make_pair("zebra", "saluto comune"));
+    ft::RBTree< int > tree;
+    tree.insertion(10);
+    tree.insertion(5);
+    tree.insertion(15);
+    tree.insertion(7);
+    tree.insertion(2);
+    tree.insertion(12);
+    tree.insertion(17);
+    tree.deletion(10);
+
 
     tree.print();
 

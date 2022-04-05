@@ -32,6 +32,9 @@ namespace ft
 	
 	private: //private member functions
 
+		Compare comparison() const {
+			return compare_function;
+		}
 
 		void printHelper(NodePtr root, std::string indent, bool last) {
 			// print the tree structure on the screen
@@ -278,8 +281,8 @@ namespace ft
 				father = search;
 				if (z == search->value)
 					return ft::make_pair(search, false);
-				// if(!value_compare()(search->value, z))
-				if(z < search->value)
+				// if(!comparisonare()(search->value, z))
+				if(comparison()(z, search->value))
 					search = search->left;
 				else
 					search = search->right;
@@ -303,7 +306,8 @@ namespace ft
 			NodePtr toBalance = NULL;
 			while (toDelete != NULL && z != toDelete->value)
 			{
-				if(z < toDelete->value)
+				// if(z < toDelete->value)
+				if(comparison()(z, toDelete->value))
 					toDelete = toDelete->left;
 				else
 					toDelete = toDelete->right;
@@ -355,7 +359,7 @@ namespace ft
 	private:
 		NodePtr root;
 		Allocator a;
-		Compare	comparison;
+		Compare	compare_function;
 	};
 	
 } // namespace ft
