@@ -11,7 +11,7 @@ int main()
     tree.insertion(ft::make_pair("libellula", "saluto comune"));
     tree.insertion(ft::make_pair("zebra", "saluto comune"));
 
-    tree.prettyPrint();
+    tree.print();
 
     return 0;
 }

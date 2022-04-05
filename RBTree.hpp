@@ -46,7 +46,7 @@ namespace ft
 			}
 				
 			std::string sColor = root->color?"RED":"BLACK";
-			std::cout<<root->value.first<<"("<<sColor<<")"<<std::endl;
+			std::cout<<root->value<<"("<<sColor<<")"<<std::endl;
 			printHelper(root->left, indent, false);
 			printHelper(root->right, indent, true);
 			}
@@ -124,55 +124,6 @@ namespace ft
 				dead->parent->right = orphan;
 			if (orphan)
 				orphan->parent = dead->parent;
-		}
-
-		void DeleteNode(NodePtr node, T z)
-		{
-			NodePtr toDelete = NULL;
-			NodePtr toBalance = NULL;
-			while (node != NULL && z != node->value)
-			{
-				if(z < node->value)
-					node = node->left;
-				else
-					node = node->right;
-			}
-			if  (node == NULL)
-				return ;
-			toDelete = node;
-			bool original_color = toDelete->color;
-			if (toDelete->left == NULL)
-			{
-				toBalance = toDelete->right;
-				fixOrphan(toDelete, toDelete->right);
-			}
-			else if (toDelete->right == NULL)
-			{
-				toBalance = toDelete->left;
-				fixOrphan(toDelete, toDelete->left);
-			}
-			else
-			{
-				NodePtr tmp = minimum(toDelete->right);
-				original_color = tmp->color;
-				toBalance = tmp->right;
-				if (tmp->parent == toDelete)
-					toBalance->parent = tmp;
-				else
-				{
-					fixOrphan(tmp, tmp->right);
-					tmp->right = toDelete->right;
-					tmp->right->parent = tmp;
-				}
-				fixOrphan(toDelete, tmp);
-				tmp->left = toDelete->left;
-				tmp->left->parent = tmp;
-				tmp->color = toDelete->color;
-			}
-			a.destroy(toDelete);
-			a.deallocate(toDelete, 1);
-			if (original_color == BLACK && toBalance != NULL)
-				balance_after_deletion(toBalance);
 		}
 
 		void balance_after_insetion(NodePtr k)
@@ -258,14 +209,15 @@ namespace ft
 						if ((s->right && !isRed(s->right)) || !s->right)
 						{
 							s->color = RED;
-							s->left->color = BLACK;
+							if (s->left)
+								s->left->color = BLACK;
 							right_rotate(s);
 							s = x->parent->right;
 						}
 						s->color = x->parent->color;
 						x->parent->color = BLACK;
 						if (s->right)
-						s->right->color = BLACK;
+							s->right->color = BLACK;
 						left_rotate(x->parent);
 						x = root;
 					}
@@ -291,14 +243,15 @@ namespace ft
 						if ((s->left && !isRed(s->left)) || !s->left)
 						{
 							s->color = RED;
-							s->right->color = BLACK;
+							if (s->right)
+								s->right->color = BLACK;
 							left_rotate(s);
 							s = x->parent->left;
 						}
 						s->color = x->parent->color;
 						x->parent->color = BLACK;
 						if (s->left)
-						s->left->color = BLACK;
+							s->left->color = BLACK;
 						right_rotate(x->parent);
 						x = root;
 					}
@@ -346,12 +299,56 @@ namespace ft
 
 		void deletion(T z)
 		{
-			DeleteNode(root, z);
+			NodePtr toDelete = root;
+			NodePtr toBalance = NULL;
+			while (toDelete != NULL && z != toDelete->value)
+			{
+				if(z < toDelete->value)
+					toDelete = toDelete->left;
+				else
+					toDelete = toDelete->right;
+			}
+			if  (toDelete == NULL)
+				return ;
+			bool original_color = toDelete->color;
+			if (toDelete->left == NULL)
+			{
+				toBalance = toDelete->right;
+				fixOrphan(toDelete, toDelete->right);
+			}
+			else if (toDelete->right == NULL)
+			{
+				toBalance = toDelete->left;
+				fixOrphan(toDelete, toDelete->left);
+			}
+			else
+			{
+				NodePtr tmp = minimum(toDelete->right);
+				original_color = tmp->color;
+				toBalance = tmp->right;
+				if (tmp->parent == toDelete)
+					toBalance->parent = tmp;
+				else
+				{
+					fixOrphan(tmp, tmp->right);
+					tmp->right = toDelete->right;
+					tmp->right->parent = tmp;
+				}
+				fixOrphan(toDelete, tmp);
+				tmp->left = toDelete->left;
+				tmp->left->parent = tmp;
+				tmp->color = toDelete->color;
+			}
+			a.destroy(toDelete);
+			a.deallocate(toDelete, 1);
+			if (original_color == BLACK && toBalance != NULL)
+				balance_after_deletion(toBalance);
 		}
 
-		void prettyPrint() {
-		if (root) {
-			printHelper(this->root, "", true);
+		void print()
+		{
+			if (root) {
+				printHelper(this->root, "", true);
 		}
 	}
 	
