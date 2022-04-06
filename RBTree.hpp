@@ -3,8 +3,6 @@
 
 #include <memory>
 #include <iostream>
-// #include <exception>
-
 #include "utils.hpp"
 
 #define BLACK 0
@@ -12,40 +10,45 @@
 
 namespace ft
 {
-	template < class T >
-	struct Node
-	{
-		struct Node<T> * parent;
-		struct Node<T> * left;
-		struct Node<T> * right;
+	template < class T > struct Node	{
+		typedef	struct Node< T >*	NodePtr;
+
 		T value;
+		NodePtr parent;
+		NodePtr left;
+		NodePtr right;
 		bool color;
 
-		Node(const T& val) : parent(NULL), left(NULL), right(NULL), value(val), color(RED) {}
-	};
+		Node(const T& val, NodePtr parent) : value(val), parent(parent), left(NULL), right(NULL), color(RED) {}
+	}; // end of Node structure
 
-	template < class T, class Ref, class Ptr >
-	struct RBTree_iterator
-	{
-		typedef Node<T>* Node;
-		typedef RBTree_iterator<T, Ref, Ptr> Self;
-		Node father;
-		Node node;
+	template < class T > struct RBTree_iterator	{
 
-		RBTree_iterator(Node node) : node(node), father(NULL) {}
-		RBTree_iterator(Node end, Node last) : node(end), father(last) {}
+		typedef	Node< T >*				NodePtr;
+		typedef	RBTree_iterator< T >	Self;
+		typedef T&						Ref;
+		typedef T*						Ptr;
+
+		NodePtr father;
+		NodePtr node;
+
+		RBTree_iterator(NodePtr node) : node(node), father(NULL) {}
+		RBTree_iterator(NodePtr end, NodePtr last) : node(end), father(last) {}
+
 		Ref operator*()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			return node->value;
 		}
+
 		Ptr operator->()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			return &node->value;
 		}
+
 		bool operator!=(const Self& s) const
 		{
 			return node != s.node;
@@ -54,21 +57,22 @@ namespace ft
 		{
 			return node == s.node;
 		}
+
 		Self& operator++()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			else if (node->right)
 			{
-				Node left = node->right;
+				NodePtr left = node->right;
 				while (left->left)
 					left = left->left;
 				node = left;
 			}
 			else
 			{
-				Node cur = node;
-				Node father = cur->parent;
+				NodePtr cur = node;
+				NodePtr father = cur->parent;
 				while (father && cur == father->right)
 				{
 					cur = cur->parent;
@@ -89,15 +93,15 @@ namespace ft
 			}
 			else if (node->left)
 			{
-				Node right = node->left;
+				NodePtr right = node->left;
 				while (right->right)
 					right = right->right;
 				node = right;
 			}
 			else
 			{
-				Node cur = node;
-				Node father = cur->parent;
+				NodePtr cur = node;
+				NodePtr father = cur->parent;
 				while (father && cur == father->left)
 				{
 					cur = cur->parent;
@@ -107,31 +111,32 @@ namespace ft
 			}
 			return *this;
 		}
-
 		Self operator++(int)
 		{
 			Self tmp = *this;
-			++*this;
+			++(*this);
 			return tmp;
 		}
 		Self operator--(int)
 		{
 			Self tmp = *this;
-			--*this;
+			--(*this);
 			return tmp;
 		}
-
-	};
+	}; // end of RBTree_iterator structure
 	
-	template < class T , class Compare = std::less<T>, class Allocator = std::allocator< Node<T> > >
-	class RBTree
-	{
+	template < class T ,
+				class Compare = std::less< T >,
+				class Allocator = std::allocator< Node< T > >
+				> class RBTree	{
 	public:
-		typedef ft::Node<T> * NodePtr;
-		typedef RBTree_iterator<T, T&, T*> iterator;
-		// typedef ft::RBT_iterator    iterator;
+		typedef ft::Node< T > *			NodePtr;
+		typedef RBTree_iterator< T >	iterator;
 	
-	private: //private member functions
+	private:
+		NodePtr root;
+		Allocator a;
+		Compare	compare_function;
 
 		Compare comparison() const {
 			return compare_function;
@@ -248,7 +253,7 @@ namespace ft
 				if (nodeFather(k) == nodeGranfather(k)->right)
 				{
 					u = nodeGranfather(k)->left;
-					if (isRed(u))		// checking for color swap only
+					if (isRed(u))
 					{
 						nodeFather(k)->color = BLACK;
 						u->color = BLACK;
@@ -267,7 +272,7 @@ namespace ft
 						left_rotate(nodeGranfather(k));
 					}
 				}
-				else			// opposite case
+				else
 				{
 					u = nodeGranfather(k)->right;
 					if (isRed(u))
@@ -292,8 +297,8 @@ namespace ft
 				if (k == root)
 					break;
 			}
-			root->color = BLACK;		// setting root BLACK in case, during color swap, it has been changed to RED
-		};
+			root->color = BLACK;
+		};	// END INSERTION BALANCE
 
 		void balance_after_deletion(NodePtr x)
 		{
@@ -370,17 +375,17 @@ namespace ft
 				}
 			}
 			x->color = BLACK;
-		};
+		};	// END DELETION BALANCE
 
 	public:
 
 		RBTree(const Compare& comp = Compare(), const Allocator& alloc = Allocator()) : root(NULL), a(alloc) {};
+
 		~RBTree()
 		{
 			deleteAllNodes(root);
 		};
 
-		// void insertion(T z)
 		ft::pair<NodePtr, bool> insertion(T z)
 		{
 			NodePtr father = NULL;
@@ -390,24 +395,22 @@ namespace ft
 				father = search;
 				if (z == search->value)
 					return ft::make_pair(search, false);
-				// if(!comparisonare()(search->value, z))
 				if(comparison()(z, search->value))
 					search = search->left;
 				else
 					search = search->right;
 			}
 			search = a.allocate( 1 );
-			a.construct( search, Node<T>(z) );
-			search->parent = father;
+			a.construct( search, Node< T >(z, father) );
 			if (father == NULL)
 				root = search;
-			else if(z < father->value)
+			else if (z < father->value)
 				father->left = search;
 			else
 				father->right = search;
 			balance_after_insetion(search);
 			return ft::make_pair(search, true);
-		}
+		} // END INSERTION
 
 		void deletion(T z)
 		{
@@ -415,8 +418,7 @@ namespace ft
 			NodePtr toBalance = NULL;
 			while (toDelete != NULL && z != toDelete->value)
 			{
-				// if(z < toDelete->value)
-				if(comparison()(z, toDelete->value))
+				if (comparison()(z, toDelete->value))
 					toDelete = toDelete->left;
 				else
 					toDelete = toDelete->right;
@@ -456,7 +458,7 @@ namespace ft
 			a.deallocate(toDelete, 1);
 			if (original_color == BLACK && toBalance != NULL)
 				balance_after_deletion(toBalance);
-		}
+		} // END NODE DELETION
 
 		iterator begin()
 		{
@@ -480,14 +482,8 @@ namespace ft
 				printHelper(this->root, "", true);
 		}
 	}
-	
-	private:
-		NodePtr root;
-		Allocator a;
-		Compare	compare_function;
-	};
+	}; // END OF CLASS RBTREE
 	
 } // namespace ft
-
 
 #endif

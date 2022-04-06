@@ -294,7 +294,7 @@ namespace ft
 		{
 			size_type pos_index = 0;
 
-			if (position > end()) throw std::length_error("out of range");
+			if (position > end()) throw std::out_of_range("out of range");
 			for (iterator it = begin(); it + pos_index != position && pos_index < _size; pos_index++) ;
 			if (_size + 1 > _capacity)
 				reserve(_capacity == 0 ? 1 : _capacity * 2);

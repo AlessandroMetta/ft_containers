@@ -12,18 +12,18 @@ int main()
     tree.insertion(17);
     // tree.deletion(10);
 
-    // ft::RBTree_iterator<int, int&, int*> it = tree.end();
-    // try
-    // {
-    //     ++it;
-    // }
-    // catch(const std::exception& e)
-    // {
-    //     std::cerr << e.what() << '\n';
-    // }
-
-    ft::RBTree_iterator<int, int&, int*> it2 = tree.begin();
-    ft::RBTree_iterator<int, int&, int*> it = tree.end();
+/*     ft::RBTree_iterator<int, int&, int*> it = tree.end();
+    try
+    {
+        ++it;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+ */
+    ft::RBTree_iterator<int> it2 = tree.begin();
+    ft::RBTree_iterator<int> it = tree.end();
     for (; it!=it2; it--)
     {
         try
@@ -45,7 +45,7 @@ int main()
         std::cout << *(--(tree.begin())) << std::endl;
         std::cout << *(--(tree.begin())) << std::endl;
         std::cout << *(--(tree.begin())) << std::endl;
-        // std::cout << *it << std::endl;
+        std::cout << *it << std::endl;
     }
     catch(const std::exception& e)
     {
@@ -55,7 +55,7 @@ int main()
 
 
 
-    /* tree.print(); */
+    // tree.print();
 
     return 0;
 }
