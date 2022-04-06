@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <iostream>
-#include "utils.hpp"
+#include "../utils.hpp"
 
 #define BLACK 0
 #define RED 1
