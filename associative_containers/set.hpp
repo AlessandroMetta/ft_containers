@@ -12,10 +12,11 @@ template < class Key,
 {
     public:
 
+    typedef Key key_type;
     typedef Key value_type;
     typedef Compare key_compare;
 
-    class value_compare(): std::binary_function<value_type, value_type, bool>
+    class value_compare : std::binary_function<value_type, value_type, bool>
     {
         friend class set;
     protected:
@@ -28,6 +29,27 @@ template < class Key,
             return comp(x, y);
         }
     };
+    typedef typename ft::RBTree<key_type, value_type, key_compare >::iterator iterator;
+
+    iterator begin()
+    {
+        return tree.begin();
+    }
+
+    iterator end()
+    {
+        return tree.end();
+    }
+
+    ft::pair<iterator, bool> insert(Key value)
+    {
+        return tree.insertion(value);
+    }
+
+    void erase(Key value)
+    {
+        return tree.deletion(value);
+    }
 
     key_compare key_comp() const
     {
@@ -40,7 +62,7 @@ template < class Key,
     };
    
     private:
-        ft::RBTree<value_type, value_type, value_compare> tree;
+        ft::RBTree<key_type, value_type, key_compare > tree;
 };
 
 }

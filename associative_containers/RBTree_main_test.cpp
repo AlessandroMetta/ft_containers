@@ -2,7 +2,7 @@
 
 int main()
 {
-    ft::RBTree< int > tree;
+    ft::RBTree< int, int > tree;
     tree.insertion(10);
     tree.insertion(5);
     tree.insertion(15);

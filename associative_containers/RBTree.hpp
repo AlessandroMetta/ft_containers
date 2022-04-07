@@ -41,14 +41,12 @@ namespace ft
 				throw std::out_of_range("Out of range");
 			return node->value;
 		}
-
 		Ptr operator->()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			return &node->value;
 		}
-
 		bool operator!=(const Self& s) const
 		{
 			return node != s.node;
@@ -57,7 +55,6 @@ namespace ft
 		{
 			return node == s.node;
 		}
-
 		Self& operator++()
 		{
 			if (node == NULL)
@@ -125,7 +122,8 @@ namespace ft
 		}
 	}; // end of RBTree_iterator structure
 	
-	template < class T ,
+	template < class K ,
+				class T ,
 				class Compare = std::less< T >,
 				class Allocator = std::allocator< Node< T > >
 				> class RBTree	{
@@ -379,14 +377,14 @@ namespace ft
 
 	public:
 
-		RBTree(const Compare& comp = Compare(), const Allocator& alloc = Allocator()) : root(NULL), a(alloc) {};
+		RBTree() : root(NULL), compare_function(Compare()), a(Allocator()) {};
 
 		~RBTree()
 		{
 			deleteAllNodes(root);
 		};
 
-		ft::pair<NodePtr, bool> insertion(T z)
+		ft::pair<iterator, bool> insertion(K z)
 		{
 			NodePtr father = NULL;
 			NodePtr search = root;
@@ -394,7 +392,7 @@ namespace ft
 			{
 				father = search;
 				if (z == search->value)
-					return ft::make_pair(search, false);
+					return ft::make_pair(iterator(search), false);
 				if(comparison()(z, search->value))
 					search = search->left;
 				else
@@ -404,15 +402,15 @@ namespace ft
 			a.construct( search, Node< T >(z, father) );
 			if (father == NULL)
 				root = search;
-			else if (z < father->value)
+			else if (comparison()(z, father->value))
 				father->left = search;
 			else
 				father->right = search;
 			balance_after_insetion(search);
-			return ft::make_pair(search, true);
+			return ft::make_pair(iterator(search), true);
 		} // END INSERTION
 
-		void deletion(T z)
+		void deletion(K z)
 		{
 			NodePtr toDelete = root;
 			NodePtr toBalance = NULL;
