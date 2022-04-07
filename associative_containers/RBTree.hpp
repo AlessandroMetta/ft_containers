@@ -384,15 +384,15 @@ namespace ft
 			deleteAllNodes(root);
 		};
 
-		ft::pair<iterator, bool> insertion(K z)
+		ft::pair<iterator, bool> insertion(T z)
 		{
 			NodePtr father = NULL;
 			NodePtr search = root;
 			while (search != NULL)
 			{
 				father = search;
-				if (z == search->value)
-					return ft::make_pair(iterator(search), false);
+				// if (z == search->value)
+				// 	return ft::make_pair(iterator(search), false);
 				if(comparison()(z, search->value))
 					search = search->left;
 				else
@@ -410,7 +410,7 @@ namespace ft
 			return ft::make_pair(iterator(search), true);
 		} // END INSERTION
 
-		void deletion(K z)
+		void deletion(T z)
 		{
 			NodePtr toDelete = root;
 			NodePtr toBalance = NULL;

@@ -4,7 +4,7 @@
 
 int main()
 {
-    ft::set<int, std::greater<int> > test_set;
+    ft::set<int> test_set;
     test_set.insert(10);
     test_set.insert(5);
     test_set.insert(15);

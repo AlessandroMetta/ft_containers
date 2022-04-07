@@ -16,7 +16,7 @@ template < class Key,
     typedef Key value_type;
     typedef Compare key_compare;
 
-    class value_compare : std::binary_function<value_type, value_type, bool>
+    class value_compare : std::binary_function<key_type, value_type, bool>
     {
         friend class set;
     protected:
@@ -29,7 +29,7 @@ template < class Key,
             return comp(x, y);
         }
     };
-    typedef typename ft::RBTree<key_type, value_type, key_compare >::iterator iterator;
+    typedef typename ft::RBTree<key_type, value_type, key_compare>::iterator iterator;
 
     iterator begin()
     {
