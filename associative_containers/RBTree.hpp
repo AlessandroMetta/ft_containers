@@ -132,9 +132,9 @@ namespace ft
 		typedef RBTree_iterator< T >	iterator;
 	
 	private:
-		NodePtr root;
-		Allocator a;
-		Compare	compare_function;
+		NodePtr		root;
+		Allocator	a;
+		Compare		compare_function;
 
 		Compare comparison() const {
 			return compare_function;
@@ -377,7 +377,7 @@ namespace ft
 
 	public:
 
-		RBTree() : root(NULL), compare_function(Compare()), a(Allocator()) {};
+		RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : root(NULL), compare_function(comp), a(alloc) {};
 
 		~RBTree()
 		{

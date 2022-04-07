@@ -29,7 +29,12 @@ template < class Key,
             return comp(x, y);
         }
     };
-    typedef typename ft::RBTree<key_type, value_type, key_compare>::iterator iterator;
+
+    typedef ft::RBTree<key_type, value_type, value_compare> tree_t;
+    typedef typename tree_t::iterator iterator;
+
+	explicit set( const Compare& comp = Compare(), const Alloc& alloc = Alloc()) : tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
+
 
     iterator begin()
     {
@@ -62,7 +67,9 @@ template < class Key,
     };
    
     private:
-        ft::RBTree<key_type, value_type, key_compare > tree;
+        tree_t tree;
+        key_compare comp;
+        Alloc alloc;
 };
 
 }

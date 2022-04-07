@@ -4,44 +4,36 @@
 
 int main()
 {
-    ft::map< std::string, int > test_map;
-    test_map.insert(ft::pair< std::string, int >("1", 1));
-    test_map.insert(ft::pair< std::string, int >("5", 5));
-    test_map.insert(ft::pair< std::string, int >("15", 15));
-    test_map.insert(ft::pair< std::string, int >("7", 7));
-	test_map.insert(ft::pair< std::string, int >("2", 2));
-	test_map.insert(ft::pair< std::string, int >("12", 12));
-	test_map.insert(ft::pair< std::string, int >("17", 17));
-	test_map.insert(ft::pair< std::string, int >("10", 10));
-    test_map.erase("10");
+	typedef std::string							key_type;
+	typedef int									mapped_type;
+	typedef ft::map < key_type, mapped_type >	map_type;
+	typedef ft::pair< key_type, mapped_type >	pair_type;
+	typedef map_type::iterator					map_iterator;
 
-    ft::map< std::string, int >::iterator it = test_map.begin();
-    for (; it!=test_map.end(); )
-    {
-        try
-        {
-            std::cout << it->first << ":" << it->second << std::endl;
-            it++;
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << '\n';
-        }
-    }
+	map_type test_map;
+	test_map.insert(pair_type("1", 1));
+	test_map.insert(pair_type("5", 5));
+	test_map.insert(pair_type("15", 15));
+	test_map.insert(pair_type("7", 7));
+	test_map.insert(pair_type("2", 2));
+	test_map.insert(pair_type("12", 12));
+	test_map.insert(pair_type("17", 17));
+	test_map.insert(pair_type("10", 10));
+	test_map.erase("10");
 
-    // ft::map<int>::iterator it = test_map.end();
-    // for (; it!=test_map.begin(); )
-    // {
-    //     --it;
-    //     try
-    //     {
-    //         std::cout << *(it) << std::endl;
-    //     }
-    //     catch(const std::exception& e)
-    //     {
-    //         std::cerr << e.what() << '\n';
-    //     }
-    // }
-
-    return 0;
+	map_iterator it = test_map.begin();
+	while (it != test_map.end())
+	{
+		try
+		{
+			std::cout << it->first << ":" << it->second << std::endl;
+			it++;
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
+	}
+	
+	return 0;
 }
