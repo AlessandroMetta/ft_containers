@@ -8,17 +8,16 @@ namespace ft {
 template < class Key,
 			class T,
 			class Compare = std::less< Key >,
-            class Alloc = std::allocator< ft::pair< const Key, T > >
-            > class map
+			class Alloc = std::allocator< ft::pair< const Key, T > >
+			> class map
 {
-    public:
+	public:
 
 	typedef	Key								key_type;
 	typedef	T								mapped_type;
 	typedef typename Alloc::value_type		value_type;
 	typedef	Compare							key_compare;
 	
-	//da rivedere
 	class value_compare : std::binary_function<value_type, value_type, bool>
 	{
 		friend class map;
@@ -32,44 +31,49 @@ template < class Key,
 			return comp(x.first, y.first);
 		}
 	};
-    
+	
 	typedef ft::RBTree< key_type, value_type, value_compare > tree_t;
 	typedef typename tree_t::iterator iterator;
 
 	explicit map( const Compare& comp = Compare(), const Alloc& alloc = Alloc()) : tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
+
+	void print()
+	{
+		tree.print();
+	}
 
 	iterator begin()
 	{
 		return tree.begin();
 	}
 
-    iterator end()
-    {
-        return tree.end();
-    }
+	iterator end()
+	{
+		return tree.end();
+	}
 
-    ft::pair<iterator, bool> insert(value_type pair)
-    {
-        return tree.insertion(pair);
-    }
+	ft::pair<iterator, bool> insert(value_type pair)
+	{
+		return tree.insertion(pair);
+	}
 
-    void erase(key_type value)
-    {
-        return tree.deletion(ft::make_pair(value, mapped_type()));
-    }
+	void erase(key_type value)
+	{
+		return tree.deletion(ft::make_pair(value, mapped_type()));
+	}
 
-    key_compare key_comp() const
-    {
-        return Compare();
-    };
+	key_compare key_comp() const
+	{
+		return Compare();
+	};
 
-    value_compare value_comp() const
-    {
-        return key_comp();
-    };
+	value_compare value_comp() const
+	{
+		return key_comp();
+	};
 
 	private:
-        tree_t	tree;
+		tree_t	tree;
 		Compare	comp;
 		Alloc	alloc;
 };

@@ -19,14 +19,16 @@ int main()
 	test_map.insert(pair_type("12", 12));
 	test_map.insert(pair_type("17", 17));
 	test_map.insert(pair_type("10", 10));
-	test_map.erase("10");
+	test_map.print();
+	// test_map.erase("5");
 
+	std::cout << "print map in ascending order" << std::endl;
 	map_iterator it = test_map.begin();
 	while (it != test_map.end())
 	{
 		try
 		{
-			std::cout << it->first << ":" << it->second << std::endl;
+			std::cout << it->first << " : " << it->second << std::endl;
 			it++;
 		}
 		catch(const std::exception& e)

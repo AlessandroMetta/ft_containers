@@ -153,7 +153,7 @@ namespace ft
 			}
 				
 			std::string sColor = root->color?"RED":"BLACK";
-			std::cout<<root->value<<"("<<sColor<<")"<<std::endl;
+			std::cout<<root->value.first<<"("<<sColor<<")"<<std::endl;
 			printHelper(root->left, indent, false);
 			printHelper(root->right, indent, true);
 			}
@@ -377,7 +377,7 @@ namespace ft
 
 	public:
 
-		RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : root(NULL), compare_function(comp), a(alloc) {};
+		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : root(NULL), compare_function(comp), a(alloc) {};
 
 		~RBTree()
 		{
@@ -391,8 +391,8 @@ namespace ft
 			while (search != NULL)
 			{
 				father = search;
-				// if (z == search->value)
-				// 	return ft::make_pair(iterator(search), false);
+				if (z == search->value)
+					return ft::make_pair(iterator(search), false);
 				if(comparison()(z, search->value))
 					search = search->left;
 				else
@@ -414,15 +414,18 @@ namespace ft
 		{
 			NodePtr toDelete = root;
 			NodePtr toBalance = NULL;
-			while (toDelete != NULL && z != toDelete->value)
+			while (toDelete != NULL)
 			{
-				if (comparison()(z, toDelete->value))
+				if (comparison()(z, toDelete->value) && !comparison()(toDelete->value, z))
 					toDelete = toDelete->left;
-				else
+				else if (!comparison()(z, toDelete->value) && comparison()(toDelete->value, z))
 					toDelete = toDelete->right;
+				else
+					break ;
 			}
 			if  (toDelete == NULL)
 				return ;
+			std::cout << toDelete->value.first << std::endl;
 			bool original_color = toDelete->color;
 			if (toDelete->left == NULL)
 			{
