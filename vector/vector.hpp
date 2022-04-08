@@ -30,14 +30,14 @@ namespace ft
 		typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 	public:
-		// vector()
+		// default constructor: vector()
 		explicit vector (const allocator_type& alloc = allocator_type())
 		: _data(0), _alloc(alloc), _capacity(0), _size(0)
 		{
 			_data = _alloc.allocate( 0 );
 		};
 
-		// vector ( n , val )
+		// fill constructor: vector ( size , value )
 		explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type())
 			: _data(0), _alloc(alloc), _capacity(0), _size(0)
@@ -46,7 +46,7 @@ namespace ft
 			assign(n, val);
 		};
 
-		// vactor ( pos , first , last )
+		// range (inizialized_ constructor: vactor ( first , last )
 		template <class InputIterator>
         	vector (InputIterator first, InputIterator last,
                 const allocator_type& alloc = allocator_type(),
@@ -58,7 +58,7 @@ namespace ft
 			assign(first, last);
 		};
 
-		// vector ( vector2 )
+		// copy constructor: vector ( vector2 )
 		vector( const vector& other )
 		: _data(0), _alloc(other._alloc), _capacity(0), _size(0)
 		{

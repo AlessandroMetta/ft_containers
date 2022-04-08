@@ -2,10 +2,23 @@
 
 the aim of the project is re-coding the most common standard template library container and relative functions
 
+
+## Log del 8 aprile, h 16
 ### to-do-list
-#### vector: finished
-#### map: started
-#### stack: absent
+#### vector: on-going
+- negli overload di funzioni con template, l'enable-if non deve controllare se il tipo di dato passato è un intero, ma se è un [iteratore](https://stackoverflow.com/questions/4335962/how-to-check-if-a-template-parameter-is-an-iterator-type-or-not)
+#### map: on-going
+- problema su erase: a livello di RBTree, non vengono eliminati i nodi con due figli
+- sono da implementare tutti i metodi. vedi reference
+#### set: on-going
+- sono da implementare tutti i metodi. vedi reference
+#### stack: not started
+
+## link utili
+- [link](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/) per implementare albero rosso-nero
+- [link](https://programmer.ink/think/use-a-red-black-tree-to-encapsulate-set-and-map-at-the-same-time.html) per implementare
+map e set con alebro rosso-nero.
+
 
 ## useful information
 - obviously read and understand deeply the subject
@@ -13,5 +26,3 @@ the aim of the project is re-coding the most common standard template library co
 - first of all, understand the std::allocator class. It's FOUNDAMENTAL!
 - Personally I found this project really difficult, the only sugggestion I can give to you is take your time
 to understand the container then try to code, if it fail, try again, and do not stop doing that.
-
-<!-- [reference for RBTree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree), how implement map -->
