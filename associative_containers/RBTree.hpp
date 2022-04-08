@@ -153,7 +153,7 @@ namespace ft
 			}
 				
 			std::string sColor = root->color?"RED":"BLACK";
-			std::cout<<root->value.first<<"("<<sColor<<")"<<std::endl;
+			std::cout<<root->value<<"("<<sColor<<")"<<std::endl;
 			printHelper(root->left, indent, false);
 			printHelper(root->right, indent, true);
 			}
@@ -425,7 +425,6 @@ namespace ft
 			}
 			if  (toDelete == NULL)
 				return ;
-			std::cout << toDelete->value.first << std::endl;
 			bool original_color = toDelete->color;
 			if (toDelete->left == NULL)
 			{

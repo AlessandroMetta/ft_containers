@@ -16,7 +16,7 @@ int main()
 	test_set.insert("2");
 	test_set.insert("12");
 	test_set.insert("17");
-	test_set.erase("10");
+	test_set.erase("5");  // numeri che danno problemi: 10, 5 e 15
 
 	set_iterator it = test_set.begin();
 	while (it != test_set.end())

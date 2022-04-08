@@ -2,7 +2,6 @@
 
 the aim of the project is re-coding the most common standard template library container and relative functions
 
-
 ## Log del 8 aprile, h 16
 ### to-do-list
 #### vector: on-going

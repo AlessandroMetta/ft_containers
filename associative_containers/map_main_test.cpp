@@ -19,8 +19,8 @@ int main()
 	test_map.insert(pair_type("12", 12));
 	test_map.insert(pair_type("17", 17));
 	test_map.insert(pair_type("10", 10));
-	test_map.print();
-	// test_map.erase("5");
+	// test_map.print();
+	test_map.erase("10"); // numeri che danno problemi: 10, 5 e 15
 
 	std::cout << "print map in ascending order" << std::endl;
 	map_iterator it = test_map.begin();
