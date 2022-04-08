@@ -33,8 +33,8 @@ template < class Key,
 	typedef ft::RBTree<key_type, value_type, value_compare> tree_t;
 	typedef typename tree_t::iterator iterator;
 
-	explicit set( const Compare& comp = Compare(), const Alloc& alloc = Alloc()) : tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
-
+	explicit set( const Compare& comp = Compare(), const Alloc& alloc = Alloc())
+	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
 
 	iterator begin()
 	{
@@ -51,6 +51,7 @@ template < class Key,
 		return tree.insertion(value);
 	}
 
+	// erase (3, in cppreference)
 	void erase(Key value)
 	{
 		return tree.deletion(value);

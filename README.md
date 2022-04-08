@@ -10,8 +10,10 @@ the aim of the project is re-coding the most common standard template library co
 #### map: on-going
 - problema su erase: a livello di RBTree, non vengono eliminati i nodi con due figli
 - sono da implementare tutti i metodi. vedi reference
+- erase necessita di ritornarte il numero di elementi eliminati (1 o 0)
 #### set: on-going
 - sono da implementare tutti i metodi. vedi reference
+- erase necessita di ritornarte il numero di elementi eliminati (1 o 0)
 #### stack: not started
 
 ## link utili
