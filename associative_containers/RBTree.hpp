@@ -10,16 +10,16 @@
 
 namespace ft
 {
+
 	template < class T > struct Node	{
 		typedef	struct Node< T >*	NodePtr;
-
 		T value;
 		NodePtr parent;
 		NodePtr left;
 		NodePtr right;
 		bool color;
 
-		Node(const T& val, NodePtr parent) : value(val), parent(parent), left(NULL), right(NULL), color(RED) {}
+		Node(const T& val) : value(val), parent(nullptr), color(RED) {}
 	}; // end of Node structure
 
 	template < class T > struct RBTree_iterator	{
@@ -133,6 +133,7 @@ namespace ft
 	
 	private:
 		NodePtr		root;
+		NodePtr		TNULL;
 		Allocator	a;
 		Compare		compare_function;
 
@@ -167,8 +168,11 @@ namespace ft
 					deleteAllNodes(node->left);
 				if (node->right)
 					deleteAllNodes(node->right);
-				a.destroy(node);
-				a.deallocate(node, 1);
+				if (node != TNULL)
+				{
+					a.destroy(node);
+					a.deallocate(node, 1);
+				}
 			}
 		}
 
@@ -179,7 +183,7 @@ namespace ft
 		};
 
 		NodePtr minimum(NodePtr node) {
-			while (node->left != NULL) {
+			while (node->left != TNULL) {
 				node = node->left;
 			}
 			return node;
@@ -188,7 +192,7 @@ namespace ft
 		void left_rotate(NodePtr x) {
 			NodePtr y = x->right;
 			x->right = y->left;
-			if (y->left != NULL) {
+			if (y->left != TNULL) {
 				y->left->parent = x;
 			}
 			y->parent = x->parent;
@@ -206,7 +210,7 @@ namespace ft
 		void right_rotate(NodePtr x) {
 			NodePtr y = x->left;
 			x->left = y->right;
-			if (y->right != NULL) {
+			if (y->right != TNULL) {
 				y->right->parent = x;
 			}
 			y->parent = x->parent;
@@ -224,7 +228,7 @@ namespace ft
 		void fixOrphan(NodePtr dead, NodePtr orphan)
 		{
 			if (nodeFather(dead) == NULL)
-				root = orphan;
+				root = orphan; //QUI!!!!!
 			else if (dead == nodeFather(dead)->left)
 				nodeFather(dead)->left = orphan;
 			else
@@ -243,53 +247,54 @@ namespace ft
 			return k->parent->parent;
 		}
 
+		//ok sembra
 		void balance_after_insetion(NodePtr k)
 		{
 			NodePtr u;
-			while (isRed(nodeFather(k)))
+			while (k->parent->color == 1)
 			{
-				if (nodeFather(k) == nodeGranfather(k)->right)
+				if (k->parent == k->parent->parent->right)
 				{
-					u = nodeGranfather(k)->left;
+					u = k->parent->parent->left;
 					if (isRed(u))
 					{
-						nodeFather(k)->color = BLACK;
 						u->color = BLACK;
-						nodeGranfather(k)->color = RED;
-						k = nodeGranfather(k);
+						k->parent->color = BLACK;
+						k->parent->parent->color = RED;
+						k = k->parent->parent;
 					}
 					else
 					{
-						if (k == nodeFather(k)->left)
+						if (k == k->parent->left)
 						{
-							k = nodeFather(k);
+							k = k->parent;
 							right_rotate(k);
 						}
-						nodeFather(k)->color = BLACK;
-						nodeGranfather(k)->color = RED;
-						left_rotate(nodeGranfather(k));
+						k->parent->color = BLACK;
+						k->parent->parent->color = RED;
+						left_rotate(k->parent->parent);
 					}
 				}
 				else
 				{
-					u = nodeGranfather(k)->right;
+					u = k->parent->parent->right;;
 					if (isRed(u))
 					{
-						nodeFather(k)->color = BLACK;
 						u->color = BLACK;
-						nodeGranfather(k)->color = RED;
-						k = nodeGranfather(k);
+						k->parent->color = BLACK;
+						k->parent->parent->color = RED;
+						k = k->parent->parent;
 					}
 					else
 					{
-						if (k == nodeFather(k)->right)
+						if (k == k->parent->right)
 						{
-							k = nodeFather(k);
+							k = k->parent;
 							left_rotate(k);
 						}
-						nodeFather(k)->color = BLACK;
-						nodeGranfather(k)->color = RED;
-						right_rotate(nodeGranfather(k));
+						k->parent->color = BLACK;
+						k->parent->parent->color = RED;
+						right_rotate(k->parent->parent);
 					}
 				}
 				if (k == root)
@@ -303,71 +308,65 @@ namespace ft
 			NodePtr s;
 			while (x != root && x->color == BLACK)
 			{
-				if(x == nodeFather(x)->left)
+				if(x == x->parent->left)
 				{
-					s = nodeFather(x)->right;
+					s = x->parent->right;
 					if (isRed(s))
 					{
 						s->color = BLACK;
-						nodeFather(x)->color = RED;
-						left_rotate(nodeFather(x));
-						s = nodeFather(x)->right;
+						x->parent->color = RED;
+						left_rotate(x->parent);
+						s = x->parent->right;
 					}
-					if (((s->left && !isRed(s->left)) || !s->left)
-						&& ((s->right && !isRed(s->right)) || !s->right))
+					if (s->left->color == 0 && s->right->color == 0)
 					{
 						s->color = RED;
-						x = nodeFather(x);
+						x = x->parent;
 					}
 					else
 					{
-						if ((s->right && !isRed(s->right)) || !s->right)
+						if (s->right->color == 0)
 						{
+							s->left->color = BLACK;
 							s->color = RED;
-							if (s->left)
-								s->left->color = BLACK;
 							right_rotate(s);
-							s = nodeFather(x)->right;
+							s = x->parent->right;
 						}
-						s->color = nodeFather(x)->color;
-						nodeFather(x)->color = BLACK;
-						if (s->right)
-							s->right->color = BLACK;
-						left_rotate(nodeFather(x));
+						s->color = x->parent->color;
+						x->parent->color = BLACK;
+						s->right->color = BLACK;
+						left_rotate(x->parent);
 						x = root;
 					}
 				}
 				else
 				{
-					s = nodeFather(x)->left;
+					s = x->parent->left;
 					if (isRed(s))
 					{
 						s->color = BLACK;
-						nodeFather(x)->color = RED;
-						right_rotate(nodeFather(x));
-						s = nodeFather(x)->left;
+						x->parent->color = RED;
+						right_rotate(x->parent);
+						s = x->parent->left;
 					}
-					if (((s->left && !isRed(s->left)) || !s->left)
-						&& ((s->right && !isRed(s->right)) || !s->right))
+					if (s->right->color == 0 && s->right->color == 0)
 					{
 						s->color = RED;
-						x = nodeFather(x);
+						x = x->parent;
 					}
 					else
 					{
-						if ((s->left && !isRed(s->left)) || !s->left)
+						if (s->left->color == 0)
 						{
+							s->right->color = BLACK;
 							s->color = RED;
-							if (s->right)
-								s->right->color = BLACK;
 							left_rotate(s);
-							s = nodeFather(x)->left;
+							s = x->parent->left;
 						}
-						s->color = nodeFather(x)->color;
-						nodeFather(x)->color = BLACK;
-						if (s->left)
-							s->left->color = BLACK;
-						right_rotate(nodeFather(x));
+						s->color = x->parent->color;
+						x->parent->color = BLACK;
+						s->left->color = BLACK;
+						right_rotate(x->parent);
 						x = root;
 					}
 				}
@@ -377,18 +376,29 @@ namespace ft
 
 	public:
 
-		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : root(NULL), compare_function(comp), a(alloc) {};
+		//RBTree ok
+		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : compare_function(comp), a(alloc){
+			TNULL = a.allocate(1);
+			a.construct(TNULL, NULL);
+			TNULL->color = 0;
+			TNULL->left = nullptr;
+			TNULL->right = nullptr;
+			root = TNULL;
+		};
 
 		~RBTree()
 		{
 			deleteAllNodes(root);
+			a.destroy(TNULL);
+			a.deallocate(TNULL, 1);
 		};
 
+		//insertion ok
 		ft::pair<iterator, bool> insertion(T z)
 		{
-			NodePtr father = NULL;
+			NodePtr father = nullptr;
 			NodePtr search = root;
-			while (search != NULL)
+			while (search != TNULL)
 			{
 				father = search;
 				if (z == search->value)
@@ -399,64 +409,79 @@ namespace ft
 					search = search->right;
 			}
 			search = a.allocate( 1 );
-			a.construct( search, Node< T >(z, father) );
-			if (father == NULL)
+			a.construct( search, Node< T >(z));
+			search->parent = father;
+			search->left = TNULL;
+			search->right = TNULL;
+			if (father == nullptr)
+			{
 				root = search;
+				search->color = 0;
+				return ft::make_pair(iterator(search), true);
+			}
 			else if (comparison()(z, father->value))
 				father->left = search;
 			else
 				father->right = search;
+			if (search->parent->parent == nullptr)
+				return ft::make_pair(iterator(search), true);
 			balance_after_insetion(search);
 			return ft::make_pair(iterator(search), true);
 		} // END INSERTION
 
+		//deletion ok
 		void deletion(T z)
 		{
-			NodePtr toDelete = root;
+			NodePtr nodeIter = root;
+			NodePtr toDelete = TNULL;
 			NodePtr toBalance = NULL;
-			while (toDelete != NULL)
+			while (nodeIter != TNULL)
 			{
-				if (comparison()(z, toDelete->value) && !comparison()(toDelete->value, z))
-					toDelete = toDelete->left;
-				else if (!comparison()(z, toDelete->value) && comparison()(toDelete->value, z))
-					toDelete = toDelete->right;
+				if (comparison()(z, nodeIter->value) && !comparison()(nodeIter->value, z))
+					nodeIter = nodeIter->left;
+				else if (!comparison()(z, nodeIter->value) && comparison()(nodeIter->value, z))
+					nodeIter = nodeIter->right;
 				else
+				{
+					toDelete = nodeIter;
 					break ;
+				}
 			}
-			if  (toDelete == NULL)
+			if  (toDelete == TNULL)
 				return ;
-			bool original_color = toDelete->color;
-			if (toDelete->left == NULL)
+			NodePtr y = toDelete;
+			bool original_color = y->color;
+			if (toDelete->left == TNULL)
 			{
 				toBalance = toDelete->right;
 				fixOrphan(toDelete, toDelete->right);
 			}
-			else if (toDelete->right == NULL)
+			else if (toDelete->right == TNULL)
 			{
 				toBalance = toDelete->left;
 				fixOrphan(toDelete, toDelete->left);
 			}
 			else
 			{
-				NodePtr tmp = minimum(toDelete->right);
-				original_color = tmp->color;
-				toBalance = tmp->right;
-				if (tmp->parent == toDelete)
-					toBalance->parent = tmp;
+				y = minimum(toDelete->right);
+				original_color = y->color;
+				toBalance = y->right;
+				if (y->parent == toDelete)
+					toBalance->parent = y;
 				else
 				{
-					fixOrphan(tmp, tmp->right);
-					tmp->right = toDelete->right;
-					tmp->right->parent = tmp;
+					fixOrphan(y, y->right);
+					y->right = toDelete->right;
+					y->right->parent = y;
 				}
-				fixOrphan(toDelete, tmp);
-				tmp->left = toDelete->left;
-				tmp->left->parent = tmp;
-				tmp->color = toDelete->color;
+				fixOrphan(toDelete, y);
+				y->left = toDelete->left;
+				y->left->parent = y;
+				y->color = toDelete->color;
 			}
 			a.destroy(toDelete);
 			a.deallocate(toDelete, 1);
-			if (original_color == BLACK && toBalance != NULL)
+			if (original_color == BLACK)
 				balance_after_deletion(toBalance);
 		} // END NODE DELETION
 

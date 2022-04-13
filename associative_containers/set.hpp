@@ -67,6 +67,11 @@ template < class Key,
 		return key_comp();
 	};
    
+	void print()
+	{
+		tree.print();	
+	}
+
 	private:
 		tree_t tree;
 		key_compare comp;
