@@ -12,6 +12,7 @@ template < class Key,
 {
 	public:
 
+	typedef	struct Node< T >*	NodePtr;
 	typedef Key key_type;
 	typedef Key value_type;
 	typedef Compare key_compare;
@@ -48,6 +49,7 @@ template < class Key,
 		return tree.end();
 	}
 
+	//-------------OBSERVERS---------------//
 	key_compare key_comp() const
 	{
 		return Compare();
@@ -57,6 +59,8 @@ template < class Key,
 	{
 		return key_comp();
 	};
+
+	//--------------------------------------//
    
 	void print()
 	{
@@ -66,6 +70,51 @@ template < class Key,
 	size_t SETgetsize(){	//x prova, da eliminare
 		return (_SETsize);
 	}
+
+	//---------------LOOKUP----------------//
+
+	size_type count( const Key& key ) const
+	{
+		NodePtr found = tree.find(key);
+		if (!found)
+			return 0;
+		return 1;
+	}
+
+	iterator find( const Key& key )
+	{
+		NodePtr found = tree.find(key);
+		if (!found)
+			return end();
+		return iterator(found);
+	}
+	
+	const_iterator find( const Key& key ) const
+	{
+
+	}
+
+	iterator lower_bound( const Key& key ) 
+	{
+		return iterator(tree.lower_bound(key));
+	}
+
+	const_iterator lower_bound( const Key& key ) const 
+	{
+		return iterator(tree.lower_bound(key));
+	}
+
+	iterator upper_bound( const Key& key ) 
+	{
+		return iterator(tree.upper_bound(key));
+	}
+
+	const_iterator upper_bound( const Key& key ) const 
+	{
+		return iterator(tree.upper_bound(key));
+	}
+
+	//-------------------------------------//
 
 	//-------------MODIFIERS---------------//
 	ft::pair<iterator, bool> insert(Key value)
