@@ -8,6 +8,7 @@ int main()
 	typedef	ft::set< key_type >	set_type;
 	typedef	set_type::iterator	set_iterator;
 
+	//		TEST INSERZIONE/DELEZIONE
 	set_type	test_set;
 	test_set.insert(10);
 	test_set.insert(5);
@@ -19,10 +20,13 @@ int main()
 	test_set.insert(11);
 	test_set.insert(13);
 	test_set.print();
-	test_set.erase(10);  // numeri che danno problemi: 10 xk root
+	test_set.erase(10);
 
 	test_set.print();
-	/*set_iterator it = test_set.begin();
+	
+
+	//		TEST ITERATOR SET
+	set_iterator it = test_set.begin();
 	while (it != test_set.end())
 	{
 		try
@@ -34,7 +38,33 @@ int main()
 		{
 			std::cerr << e.what() << '\n';
 		}
-	}*/
+	}
+
+
+	/*set_type testo;
+	testo.insert("ciao");
+	testo.insert("casa");
+	std::cout << "altezza albero == " << testo.size() << std::endl;
+	testo.erase("ciao");
+	std::cout << "altezza albero == " << testo.size() << std::endl;
+	testo.erase("casa");
+	if (testo.empty())
+			std::cout << "altezza albero vuoto :c" << std::endl;*/
+
+	/*
+	set_type set1;
+	set_type set2;
+
+	set1.insert("set1_uno");
+	set1.insert("set2_due");
+	set2.insert("set2_uno");
+	set2.insert("set2_due");
+
+	set1.swap(set2);
+	
+	std::cout << "elementi in set1:\n" << set1[0] << "\n" << set1[1] << std::endl;
+	std::cout << "elementi in set2:\n" << set2[0] << "\n" << set2[1] << std::endl;
+	*/
 
 	return 0;
 }

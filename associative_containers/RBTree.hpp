@@ -136,6 +136,7 @@ namespace ft
 		NodePtr		TNULL;
 		Allocator	a;
 		Compare		compare_function;
+		size_t _RBTsize;
 
 		Compare comparison() const {
 			return compare_function;
@@ -379,11 +380,12 @@ namespace ft
 		//RBTree ok
 		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : compare_function(comp), a(alloc){
 			TNULL = a.allocate(1);
-			a.construct(TNULL, NULL);
+			a.construct(TNULL, 0);
 			TNULL->color = 0;
 			TNULL->left = nullptr;
 			TNULL->right = nullptr;
 			root = TNULL;
+			_RBTsize = 0;
 		};
 
 		~RBTree()
@@ -417,6 +419,7 @@ namespace ft
 			{
 				root = search;
 				search->color = 0;
+				_RBTsize++;
 				return ft::make_pair(iterator(search), true);
 			}
 			else if (comparison()(z, father->value))
@@ -424,8 +427,12 @@ namespace ft
 			else
 				father->right = search;
 			if (search->parent->parent == nullptr)
+			{
+				_RBTsize++;
 				return ft::make_pair(iterator(search), true);
+			}
 			balance_after_insetion(search);
+			_RBTsize++;
 			return ft::make_pair(iterator(search), true);
 		} // END INSERTION
 
@@ -483,12 +490,18 @@ namespace ft
 			a.deallocate(toDelete, 1);
 			if (original_color == BLACK)
 				balance_after_deletion(toBalance);
+			_RBTsize--;
 		} // END NODE DELETION
 
 		iterator begin()
 		{
 			NodePtr left = root;
-			while (left->left != NULL)
+			/*while (left->left != NULL)
+				left = left->left;
+			return iterator(left);*/
+			if (!_RBTsize)
+				return (end());
+			while(left->left != TNULL)
 				left = left->left;
 			return iterator(left);
 		}
@@ -496,17 +509,26 @@ namespace ft
 		iterator end()
 		{
 			NodePtr right = root;
-			while (right->right != NULL)
+			while (right->right != TNULL)
 				right = right->right;
 			return iterator(NULL, right);
 		}
 
+		//support function
 		void print()
 		{
-			if (root) {
+			if (root)
 				printHelper(this->root, "", true);
 		}
-	}
+
+		size_t size(){
+			return _RBTsize;
+		}
+
+		size_t max_size(){
+			return (a.max_size());
+		}
+		//-----------------------//
 	}; // END OF CLASS RBTREE
 	
 } // namespace ft
