@@ -17,9 +17,14 @@ namespace ft
 		NodePtr parent;
 		NodePtr left;
 		NodePtr right;
-		bool color;
+		bool	color;
 
-		Node(const T& val) : value(val), parent(nullptr), color(RED) {}
+		bool	_TNULL;
+		int		endflag;
+		NodePtr	endptr;
+
+		Node(const T& val) : value(val), parent(nullptr), color(RED),  _TNULL(false), endflag(0), endptr(nullptr){}
+		Node() : parent(nullptr), color(RED),  _TNULL(false), endflag(0), endptr(nullptr){}
 	}; // end of Node structure
 
 	template < class T > struct RBTree_iterator	{
@@ -30,10 +35,12 @@ namespace ft
 		typedef T*						Ptr;
 
 		NodePtr father;
+		NodePtr TNULL;
 		NodePtr node;
 
 		RBTree_iterator(NodePtr node) : node(node), father(NULL) {}
-		RBTree_iterator(NodePtr end, NodePtr last) : node(end), father(last) {}
+		RBTree_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
+		//RBTree_iterator(NodePtr end, NodePtr last) : node(end), father(last) {}
 
 		Ref operator*()
 		{
@@ -55,7 +62,7 @@ namespace ft
 		{
 			return node == s.node;
 		}
-		Self& operator++()
+		/*Self& operator++()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
@@ -78,8 +85,34 @@ namespace ft
 				node = father;
 			}
 			return *this;
+		}*/
+
+		Self& operator++()
+		{
+			if (node->endflag)
+			{
+				if (node->endflag == 2) // se flag == 2 sono in end
+					throw std::out_of_range("Out of range");
+				node = node->endptr;
+				return(*this);
+			}
+			if (!node->right->_TNULL)
+			{
+				node = node->right;
+				while(!node->left->_TNULL)
+					node = node->left;
+				return *this;
+			}
+			NodePtr next = node->parent;
+			while(!next->_TNULL && node == next->right){
+				node = next;
+				next = next->parent;
+			}
+			node = next;
+			return *this;
 		}
-		Self& operator--()
+		
+		/*Self& operator--()
 		{
 			if (node == NULL)
 			{
@@ -107,7 +140,33 @@ namespace ft
 				node = father;
 			}
 			return *this;
+		}*/
+
+		Self& operator--(){
+			if (node->endflag == 2)
+			{
+				node = node->parent;
+				return *this;
+			}
+			/*
+			if (!node->parent)
+				lancia eccezione
+			*/
+			if (!node->left->_TNULL){
+				node = node->left;
+				while(!node->right->_TNULL)
+					node = node->right;
+				return *this;
+			}
+			NodePtr prec = node->parent;
+			while(!prec->_TNULL && node == prec->left){
+				node = prec;
+				prec = prec->parent;
+			}
+			node = prec;
+			return *this;
 		}
+
 		Self operator++(int)
 		{
 			Self tmp = *this;
@@ -136,7 +195,28 @@ namespace ft
 		NodePtr		TNULL;
 		Allocator	a;
 		Compare		compare_function;
-		size_t _RBTsize;
+		size_t		_RBTsize;
+
+		//-------prova-------//
+		NodePtr		_LAST;
+		NodePtr		_END;
+
+		void update_END()
+		{
+			NodePtr iter = root;
+			while(iter->right && !iter->right->_TNULL)
+				iter = iter->right;
+			if (_LAST != _END)
+			{
+				_LAST->endflag = 0;
+				_LAST->endptr = NULL;
+			}
+			_LAST = iter;
+			_LAST->endflag = 1;
+			_LAST->endptr = _END;
+			_END->parent = _LAST;
+		}
+		//
 
 		Compare comparison() const {
 			return compare_function;
@@ -380,12 +460,23 @@ namespace ft
 		//RBTree ok
 		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : compare_function(comp), a(alloc){
 			TNULL = a.allocate(1);
-			a.construct(TNULL, 0);
+			a.construct(TNULL);
 			TNULL->color = 0;
 			TNULL->left = nullptr;
 			TNULL->right = nullptr;
-			root = TNULL;
+			TNULL->_TNULL = true;
+			
+			_END = a.allocate(1);
+			a.construct(_END);
+			_END->color = 0;
+			_END->left = nullptr;
+			_END->right = nullptr;
+			_END->_TNULL = true;
+			_END->endflag = 2;
+			_LAST = _END;
+
 			_RBTsize = 0;
+			root = TNULL;
 		};
 
 		~RBTree()
@@ -393,6 +484,7 @@ namespace ft
 			deleteAllNodes(root);
 			a.destroy(TNULL);
 			a.deallocate(TNULL, 1);
+			//_END ???
 		};
 
 		//insertion ok
@@ -420,6 +512,7 @@ namespace ft
 				root = search;
 				search->color = 0;
 				_RBTsize++;
+				update_END();
 				return ft::make_pair(iterator(search), true);
 			}
 			else if (comparison()(z, father->value))
@@ -429,10 +522,12 @@ namespace ft
 			if (search->parent->parent == nullptr)
 			{
 				_RBTsize++;
+				update_END();
 				return ft::make_pair(iterator(search), true);
 			}
 			balance_after_insetion(search);
 			_RBTsize++;
+			update_END();
 			return ft::make_pair(iterator(search), true);
 		} // END INSERTION
 
@@ -491,6 +586,7 @@ namespace ft
 			if (original_color == BLACK)
 				balance_after_deletion(toBalance);
 			_RBTsize--;
+			update_END();
 		} // END NODE DELETION
 
 		iterator begin()
@@ -508,10 +604,11 @@ namespace ft
 
 		iterator end()
 		{
-			NodePtr right = root;
+			/*NodePtr right = root;
 			while (right->right != TNULL)
 				right = right->right;
-			return iterator(NULL, right);
+			return iterator(NULL, right);*/
+			return iterator(_END);
 		}
 
 		//support function

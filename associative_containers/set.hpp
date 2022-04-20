@@ -12,7 +12,6 @@ template < class Key,
 {
 	public:
 
-	typedef	struct Node< T >*	NodePtr;
 	typedef Key key_type;
 	typedef Key value_type;
 	typedef Compare key_compare;
@@ -39,6 +38,7 @@ template < class Key,
 		_SETsize = 0;
 	};
 
+	//--------------ITERATORS----------------//
 	iterator begin()
 	{
 		return tree.begin();
@@ -49,72 +49,20 @@ template < class Key,
 		return tree.end();
 	}
 
-	//-------------OBSERVERS---------------//
-	key_compare key_comp() const
-	{
-		return Compare();
-	};
+	//---------------CAPACITY---------------//
+	typedef size_t	size_type;
 
-	value_compare value_comp() const
-	{
-		return key_comp();
-	};
-
-	//--------------------------------------//
-   
-	void print()
-	{
-		tree.print();	
+	bool empty() const{
+		return (!_SETsize ? 1 : 0);
 	}
-
-	size_t SETgetsize(){	//x prova, da eliminare
+	
+	size_type size() const{
 		return (_SETsize);
 	}
 
-	//---------------LOOKUP----------------//
-
-	size_type count( const Key& key ) const
-	{
-		NodePtr found = tree.find(key);
-		if (!found)
-			return 0;
-		return 1;
+	size_type max_size(){
+		return(tree.max_size());
 	}
-
-	iterator find( const Key& key )
-	{
-		NodePtr found = tree.find(key);
-		if (!found)
-			return end();
-		return iterator(found);
-	}
-	
-	const_iterator find( const Key& key ) const
-	{
-
-	}
-
-	iterator lower_bound( const Key& key ) 
-	{
-		return iterator(tree.lower_bound(key));
-	}
-
-	const_iterator lower_bound( const Key& key ) const 
-	{
-		return iterator(tree.lower_bound(key));
-	}
-
-	iterator upper_bound( const Key& key ) 
-	{
-		return iterator(tree.upper_bound(key));
-	}
-
-	const_iterator upper_bound( const Key& key ) const 
-	{
-		return iterator(tree.upper_bound(key));
-	}
-
-	//-------------------------------------//
 
 	//-------------MODIFIERS---------------//
 	ft::pair<iterator, bool> insert(Key value)
@@ -131,39 +79,45 @@ template < class Key,
 	}
 
 	template<class Type> //Di supporto per swap
-	void swapContent(Type &a, Type &b)
+	void swapContent(Type *a, Type *b) //set1 set2
 	{
-		Type tmp(a);
+		Type *tmp; //copy constr
+		tmp = a;
 		a = b;
 		b = tmp;
 	}
 
 	void swap(set& x)
 	{
-		swapContent(tree, x.tree);
-		swapContent(_SETsize, x._SETsize);
-		swapContent(alloc, x.alloc);
-		swapContent(comp, x.comp);
-		//swapContent(begin);
-		//swapContent(end);
+		swapContent(&tree, &x.tree);
+		swapContent(&_SETsize, &x._SETsize);
+		swapContent(&alloc, &x.alloc);
+		swapContent(&comp, &x.comp);
 	}
-	//----------------------------------//
 
-	//-------------CAPACITY-------------//
-	typedef size_t	size_type;
+	//--------------OBSERVERS----------------//
+	key_compare key_comp() const
+	{
+		return Compare();
+	};
 
-	bool empty() const{
-		return (!_SETsize ? 1 : 0);
+	value_compare value_comp() const
+	{
+		return key_comp();
+	};
+
+	//--------------OPERATIONS--------------//
+
+	//--------------SUPPORT--------------// da cancellare in pre-push
+
+	void print()
+	{
+		tree.print();	
 	}
-	
-	size_type size() const{
+
+	size_t SETgetsize(){	//x prova, da eliminare
 		return (_SETsize);
 	}
-
-	size_type max_size(){
-		return(tree.max_size());
-	}
-	//----------------------------------//
 
 	private:
 		tree_t tree;
