@@ -7,6 +7,7 @@ int main()
 	typedef	std::string			key_type;
 	typedef	ft::set< key_type >	set_type;
 	typedef	set_type::iterator	set_iterator;
+	typedef	set_type::reverse_iterator	set_reverse_iterator;
 
 	//		TEST INSERZIONE/DELEZIONE
 	/*set_type	test_set;
@@ -63,6 +64,7 @@ int main()
 	if (testo.empty())
 			std::cout << "altezza albero vuoto :c" << std::endl;*/
 
+	/*
 	// TEST SWAP SET
 
 	set_type set1;
@@ -79,7 +81,25 @@ int main()
 	
 	std::cout << "elementi in set1:\n" << *it << "\n" << *(++it) << std::endl;
 	//std::cout << "elementi in set2:\n" << set2[0] << "\n" << set2[1] << std::endl;
+	*/
+
+
+	set_type set1;
+	set_type set2;
+
+
+	set2.insert("set2_uno");
+	set2.insert("set2_due");
+
+	set_iterator it2 = set2.begin();
+
+	set2.insert(it2, "set2_tre");
+
+	set_reverse_iterator it = set2.rbegin();
 	
+	std::cout << "elementi in set1:\n";
+	while (it != set2.rend())
+		std::cout << *it++ << std::endl;	
 
 	return 0;
 }

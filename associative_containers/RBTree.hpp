@@ -29,26 +29,29 @@ namespace ft
 
 	template < class T > struct RBTree_iterator	{
 
-		typedef	Node< T >*				NodePtr;
-		typedef	RBTree_iterator< T >	Self;
-		typedef T&						Ref;
-		typedef T*						Ptr;
+		typedef	Node< T >*					NodePtr;
+		typedef	RBTree_iterator< T >		Self;
+		typedef	bidirectional_iterator_tag	iterator_category;
+		typedef	std::ptrdiff_t				difference_type;
+		typedef T							value_type;
+		typedef T&							reference;
+		typedef T*							pointer;
 
 		NodePtr father;
 		NodePtr TNULL;
 		NodePtr node;
 
-		RBTree_iterator(NodePtr node) : node(node), father(NULL) {}
+		RBTree_iterator(NodePtr node) : father(NULL), node(node) {}
 		RBTree_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
 		//RBTree_iterator(NodePtr end, NodePtr last) : node(end), father(last) {}
 
-		Ref operator*()
+		reference operator*()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			return node->value;
 		}
-		Ptr operator->()
+		pointer operator->()
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
@@ -189,6 +192,7 @@ namespace ft
 	public:
 		typedef ft::Node< T > *			NodePtr;
 		typedef RBTree_iterator< T >	iterator;
+		typedef ft::reverse_iterator<iterator>	reverse_iterator;
 	
 	private:
 		NodePtr		root;
@@ -459,7 +463,7 @@ namespace ft
 	public:
 
 		//RBTree ok
-		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : compare_function(comp), a(alloc){
+		explicit RBTree(const Compare& comp, const Allocator& alloc = Allocator()) : a(alloc), compare_function(comp){
 			TNULL = a.allocate(1);
 			a.construct(TNULL);
 			TNULL->color = 0;

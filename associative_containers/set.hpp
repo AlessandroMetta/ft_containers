@@ -29,9 +29,12 @@ template < class Key,
 			return comp(x, y);
 		}
 	};
-
+	
 	typedef ft::RBTree<key_type, value_type, value_compare> tree_t;
 	typedef typename tree_t::iterator iterator;
+	typedef const iterator const_iterator;
+	typedef	ft::reverse_iterator<iterator>			reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 	explicit set( const Compare& comp = Compare(), const Alloc& alloc = Alloc())
 	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {
@@ -49,8 +52,25 @@ template < class Key,
 		return tree.end();
 	}
 
-	//rbegin()
-	//rend()
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(end());
+	}
+
+	const_reverse_iterator rbegin() const
+	{
+		return const_reverse_iterator(end());
+	}
+	
+	reverse_iterator rend()
+	{
+		return reverse_iterator(begin());
+	}
+
+	const_reverse_iterator rend() const
+	{
+		return const_reverse_iterator(begin());
+	}
 
 	//---------------CAPACITY---------------//
 	typedef size_t	size_type;
@@ -68,7 +88,7 @@ template < class Key,
 	}
 
 	//-------------MODIFIERS---------------//
-	ft::pair<iterator, bool> insert(Key value)
+	ft::pair<iterator, bool> insert(const value_type& value)
 	{
 		ft::pair<iterator, bool> ret = tree.insertion(value);
 		_SETsize = tree.size();
@@ -76,8 +96,8 @@ template < class Key,
 	}
 
 	iterator insert (iterator position, const value_type& val){
-		if (position)
-			;
+		iterator it = position;
+		++it;
 		return(insert(val).first);
 	}
 
