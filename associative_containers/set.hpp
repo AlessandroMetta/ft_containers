@@ -76,7 +76,8 @@ template < class Key,
 	}
 
 	iterator insert (iterator position, const value_type& val){
-		if (position) ;
+		if (position)
+			;
 		return(insert(val).first);
 	}
 
@@ -96,7 +97,7 @@ template < class Key,
 		_SETsize = tree.size();
 	}
 
-	void erase(InputIterator first, InputIterator last){
+	void erase(iterator first, iterator last){
 		while(first != last)
 			erase((*first)++);
 	}
