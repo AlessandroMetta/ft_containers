@@ -455,6 +455,7 @@ namespace ft
 			x->color = BLACK;
 		};	// END DELETION BALANCE
 
+
 	public:
 
 		//RBTree ok
@@ -484,7 +485,8 @@ namespace ft
 			deleteAllNodes(root);
 			a.destroy(TNULL);
 			a.deallocate(TNULL, 1);
-			//_END ???
+			a.destroy(_END);
+			a.deallocate(_END, 1);
 		};
 
 		//insertion ok
@@ -612,6 +614,16 @@ namespace ft
 		}
 
 		//support function
+
+		void clear()
+        {
+            deleteAllNodes(root);
+            _RBTsize = 0;
+            root = TNULL;
+            _END->parent = nullptr;
+            _LAST = _END;
+        }
+
 		void print()
 		{
 			if (root)

@@ -49,6 +49,9 @@ template < class Key,
 		return tree.end();
 	}
 
+	//rbegin()
+	//rend()
+
 	//---------------CAPACITY---------------//
 	typedef size_t	size_type;
 
@@ -72,16 +75,36 @@ template < class Key,
 		return (ret);
 	}
 
-	void erase(Key value) // erase (3, in cppreference)
+	iterator insert (iterator position, const value_type& val){
+		if (position) ;
+		return(insert(val).first);
+	}
+
+	template <class InputIterator>
+	void insert(InputIterator first, InputIterator last){
+		while(first != last)
+			insert((*first)++);
+	}
+
+	void erase(iterator position){
+		erase(*position);
+	}
+
+	void erase(Key value) // erase (2, in cppreference)
 	{
 		tree.deletion(value);
 		_SETsize = tree.size();
 	}
 
+	void erase(InputIterator first, InputIterator last){
+		while(first != last)
+			erase((*first)++);
+	}
+
 	template<class Type> //Di supporto per swap
-	void swapContent(Type *a, Type *b) //set1 set2
+	void swapContent(Type *a, Type *b) 
 	{
-		Type *tmp; //copy constr
+		Type *tmp;
 		tmp = a;
 		a = b;
 		b = tmp;
@@ -95,6 +118,13 @@ template < class Key,
 		swapContent(&comp, &x.comp);
 	}
 
+	void clear()
+    {
+        tree.clear();
+        _SETsize = 0;
+    }
+
+	//clear()
 	//--------------OBSERVERS----------------//
 	key_compare key_comp() const
 	{
