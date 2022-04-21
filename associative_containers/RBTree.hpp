@@ -43,7 +43,6 @@ namespace ft
 
 		RBTree_iterator(NodePtr node) : father(NULL), node(node) {}
 		RBTree_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
-		//RBTree_iterator(NodePtr end, NodePtr last) : node(end), father(last) {}
 
 		reference operator*()
 		{
@@ -65,30 +64,6 @@ namespace ft
 		{
 			return node == s.node;
 		}
-		/*Self& operator++()
-		{
-			if (node == NULL)
-				throw std::out_of_range("Out of range");
-			else if (node->right)
-			{
-				NodePtr left = node->right;
-				while (left->left)
-					left = left->left;
-				node = left;
-			}
-			else
-			{
-				NodePtr cur = node;
-				NodePtr father = cur->parent;
-				while (father && cur == father->right)
-				{
-					cur = cur->parent;
-					father = father->parent;
-				}
-				node = father;
-			}
-			return *this;
-		}*/
 
 		Self& operator++()
 		{
@@ -115,36 +90,6 @@ namespace ft
 			return *this;
 		}
 		
-		/*Self& operator--()
-		{
-			if (node == NULL)
-			{
-				if (father != NULL)
-					node = father;
-				else
-					throw std::out_of_range("Out of range");
-			}
-			else if (node->left)
-			{
-				NodePtr right = node->left;
-				while (right->right)
-					right = right->right;
-				node = right;
-			}
-			else
-			{
-				NodePtr cur = node;
-				NodePtr father = cur->parent;
-				while (father && cur == father->left)
-				{
-					cur = cur->parent;
-					father = father->parent;
-				}
-				node = father;
-			}
-			return *this;
-		}*/
-
 		Self& operator--(){
 			if (node->endflag == 2)
 			{
@@ -201,7 +146,6 @@ namespace ft
 		Compare		compare_function;
 		size_t		_RBTsize;
 
-		//-------prova-------//
 		NodePtr		_LAST;
 		NodePtr		_END;
 
@@ -220,7 +164,6 @@ namespace ft
 			_LAST->endptr = _END;
 			_END->parent = _LAST;
 		}
-		//
 
 		Compare comparison() const {
 			return compare_function;
@@ -228,7 +171,7 @@ namespace ft
 
 		void printHelper(NodePtr root, std::string indent, bool last) {
 			// print the tree structure on the screen
-			if (root != NULL) {
+			if (root != TNULL) {
 			std::cout<<indent;
 			if (last) {
 				std::cout<<"R----";
@@ -336,7 +279,7 @@ namespace ft
 		void balance_after_insetion(NodePtr k)
 		{
 			NodePtr u;
-			while (k->parent->color == 1)
+			while (isRed(k->parent))
 			{
 				if (k->parent == k->parent->parent->right)
 				{
@@ -391,7 +334,7 @@ namespace ft
 		void balance_after_deletion(NodePtr x)
 		{
 			NodePtr s;
-			while (x != root && x->color == BLACK)
+			while (x != root && !isRed(x))
 			{
 				if(x == x->parent->left)
 				{
@@ -403,14 +346,14 @@ namespace ft
 						left_rotate(x->parent);
 						s = x->parent->right;
 					}
-					if (s->left->color == 0 && s->right->color == 0)
+					if (!isRed(s->left) && !isRed(s->right))
 					{
 						s->color = RED;
 						x = x->parent;
 					}
 					else
 					{
-						if (s->right->color == 0)
+						if (!isRed(s->right))
 						{
 							s->left->color = BLACK;
 							s->color = RED;
@@ -434,14 +377,14 @@ namespace ft
 						right_rotate(x->parent);
 						s = x->parent->left;
 					}
-					if (s->right->color == 0 && s->right->color == 0)
+					if (!isRed(s->left) && !isRed(s->right))
 					{
 						s->color = RED;
 						x = x->parent;
 					}
 					else
 					{
-						if (s->left->color == 0)
+						if (!isRed(s->left))
 						{
 							s->right->color = BLACK;
 							s->color = RED;

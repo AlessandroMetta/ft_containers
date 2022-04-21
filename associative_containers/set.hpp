@@ -104,7 +104,10 @@ template < class Key,
 	template <class InputIterator>
 	void insert(InputIterator first, InputIterator last){
 		while(first != last)
-			insert((*first)++);
+		{
+			insert(*first);
+			first++;
+		}
 	}
 
 	void erase(iterator position){
@@ -118,8 +121,11 @@ template < class Key,
 	}
 
 	void erase(iterator first, iterator last){
-		while(first != last)
-			erase((*first)++);
+		while (first != last)
+		{
+			erase(*first);
+			first++;
+		}
 	}
 
 	template<class Type> //Di supporto per swap
