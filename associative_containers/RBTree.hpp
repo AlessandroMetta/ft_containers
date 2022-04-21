@@ -30,7 +30,7 @@ namespace ft
 	template < class T > struct RBTree_iterator	{
 
 		typedef	Node< T >*					NodePtr;
-		typedef	RBTree_iterator< T >		Self;
+		typedef	RBTree_iterator< T >		iterator;
 		typedef	bidirectional_iterator_tag	iterator_category;
 		typedef	std::ptrdiff_t				difference_type;
 		typedef T							value_type;
@@ -44,28 +44,28 @@ namespace ft
 		RBTree_iterator(NodePtr node) : father(NULL), node(node) {}
 		RBTree_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
 
-		reference operator*()
+		reference operator*() const
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			return node->value;
 		}
-		pointer operator->()
+		pointer operator->() const
 		{
 			if (node == NULL)
 				throw std::out_of_range("Out of range");
 			return &node->value;
 		}
-		bool operator!=(const Self& s) const
+		bool operator!=(const iterator& s) const
 		{
 			return node != s.node;
 		} 
-		bool operator==(const Self& s) const
+		bool operator==(const iterator& s) const
 		{
 			return node == s.node;
 		}
 
-		Self& operator++()
+		iterator& operator++()
 		{
 			if (node->endflag)
 			{
@@ -90,7 +90,7 @@ namespace ft
 			return *this;
 		}
 		
-		Self& operator--(){
+		iterator& operator--(){
 			if (node->endflag == 2)
 			{
 				node = node->parent;
@@ -115,29 +115,138 @@ namespace ft
 			return *this;
 		}
 
-		Self operator++(int)
+		iterator operator++(int)
 		{
-			Self tmp = *this;
+			iterator tmp = *this;
 			++(*this);
 			return tmp;
 		}
-		Self operator--(int)
+		iterator operator--(int)
 		{
-			Self tmp = *this;
+			iterator tmp = *this;
 			--(*this);
 			return tmp;
 		}
 	}; // end of RBTree_iterator structure
 	
+	template < class T > struct RBTree_const_iterator	{
+
+		typedef	Node< T >*					NodePtr;
+		typedef	RBTree_const_iterator< T >	const_iterator;
+		typedef	RBTree_iterator< T >		iterator;
+		typedef	bidirectional_iterator_tag	iterator_category;
+		typedef	std::ptrdiff_t				difference_type;
+		typedef T							value_type;
+		typedef value_type &							reference;
+		typedef value_type*							pointer;
+
+		NodePtr father;
+		NodePtr TNULL;
+		NodePtr node;
+
+		RBTree_const_iterator(iterator p) : father(p.father), node(p.node) {}
+		RBTree_const_iterator(NodePtr node) : father(NULL), node(node) {}
+		RBTree_const_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
+
+		reference operator*() const
+		{
+			if (node == NULL)
+				throw std::out_of_range("Out of range");
+			return node->value;
+		}
+		pointer operator->() const
+		{
+			if (node == NULL)
+				throw std::out_of_range("Out of range");
+			return &node->value;
+		}
+		bool operator!=(const const_iterator& s) const
+		{
+			return node != s.node;
+		} 
+		bool operator==(const const_iterator& s) const
+		{
+			return node == s.node;
+		}
+
+		const_iterator& operator++()
+		{
+			if (node->endflag)
+			{
+				if (node->endflag == 2) // se flag == 2 sono in end
+					throw std::out_of_range("Out of range");
+				node = node->endptr;
+				return(*this);
+			}
+			if (!node->right->_TNULL)
+			{
+				node = node->right;
+				while(!node->left->_TNULL)
+					node = node->left;
+				return *this;
+			}
+			NodePtr next = node->parent;
+			while(!next->_TNULL && node == next->right){
+				node = next;
+				next = next->parent;
+			}
+			node = next;
+			return *this;
+		}
+		
+		const_iterator& operator--(){
+			if (node->endflag == 2)
+			{
+				node = node->parent;
+				return *this;
+			}
+			/*
+			if (!node->parent)
+				lancia eccezione
+			*/
+			if (!node->left->_TNULL){
+				node = node->left;
+				while(!node->right->_TNULL)
+					node = node->right;
+				return *this;
+			}
+			NodePtr prec = node->parent;
+			while(!prec->_TNULL && node == prec->left){
+				node = prec;
+				prec = prec->parent;
+			}
+			node = prec;
+			return *this;
+		}
+
+		const_iterator operator++(int)
+		{
+			const_iterator tmp = *this;
+			++(*this);
+			return tmp;
+		}
+		const_iterator operator--(int)
+		{
+			const_iterator tmp = *this;
+			--(*this);
+			return tmp;
+		}
+	}; // end of RBTree_const_iterator structure
+
+
 	template < class K ,
 				class T ,
 				class Compare = std::less< T >,
 				class Allocator = std::allocator< Node< T > >
 				> class RBTree	{
 	public:
-		typedef ft::Node< T > *			NodePtr;
-		typedef RBTree_iterator< T >	iterator;
-		typedef ft::reverse_iterator<iterator>	reverse_iterator;
+		typedef T										value_type;
+		typedef ft::Node< T > *							NodePtr;
+		typedef RBTree_iterator< T >					iterator;
+		typedef RBTree_const_iterator< T >				const_iterator;
+		typedef ft::reverse_iterator<iterator>			reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef size_t									size_type;
 	
 	private:
 		NodePtr		root;
@@ -437,7 +546,7 @@ namespace ft
 		};
 
 		//insertion ok
-		ft::pair<iterator, bool> insertion(T z)
+		ft::pair<iterator, bool> insertion(value_type z)
 		{
 			NodePtr father = nullptr;
 			NodePtr search = root;
@@ -481,7 +590,7 @@ namespace ft
 		} // END INSERTION
 
 		//deletion ok
-		void deletion(T z)
+		size_type deletion(value_type z)
 		{
 			NodePtr nodeIter = root;
 			NodePtr toDelete = TNULL;
@@ -499,7 +608,7 @@ namespace ft
 				}
 			}
 			if  (toDelete == TNULL)
-				return ;
+				return 0;
 			NodePtr y = toDelete;
 			bool original_color = y->color;
 			if (toDelete->left == TNULL)
@@ -536,14 +645,12 @@ namespace ft
 				balance_after_deletion(toBalance);
 			_RBTsize--;
 			update_END();
+			return 1;
 		} // END NODE DELETION
 
 		iterator begin()
 		{
 			NodePtr left = root;
-			/*while (left->left != NULL)
-				left = left->left;
-			return iterator(left);*/
 			if (!_RBTsize)
 				return (end());
 			while(left->left != TNULL)
@@ -553,12 +660,24 @@ namespace ft
 
 		iterator end()
 		{
-			/*NodePtr right = root;
-			while (right->right != TNULL)
-				right = right->right;
-			return iterator(NULL, right);*/
 			return iterator(_END);
 		}
+
+		const_iterator begin() const
+		{
+			NodePtr left = root;
+			if (!_RBTsize)
+				return (end());
+			while(left->left != TNULL)
+				left = left->left;
+			return iterator(left);
+		}
+
+		const_iterator end() const
+		{
+			return iterator(_END);
+		}
+
 
 		//support function
 
@@ -571,17 +690,67 @@ namespace ft
             _LAST = _END;
         }
 
+		iterator search(const value_type& z) const{
+			NodePtr search = root;
+			while (search != TNULL)
+			{
+				if (z == search->value)
+					return iterator(search);
+				if(comparison()(z, search->value))
+					search = search->left;
+				else
+					search = search->right;
+			}
+			return end();
+		}
+
+		bool count(const value_type& z) const{
+			NodePtr search = root;
+			while (search != TNULL)
+			{
+				if (z == search->value)
+					return true;
+				if(comparison()(z, search->value))
+					search = search->left;
+				else
+					search = search->right;
+			}
+			return false;
+		}
+
+		iterator lower_bound(const value_type& z) const{
+			iterator it = begin();
+			while(it != end() && z > *it)
+				it++;
+			return (it);
+		}
+
+		iterator upper_bound(const value_type& z) const{
+			iterator it = begin();
+			while(it != end() && z > *it)
+				it++;
+			if (it == end())
+				return (it);
+			else if (*it == z)
+				return (++it);
+			return(it);
+		}
+
+		pair<iterator,iterator> equal_range(const value_type& z) const{
+			return ft::make_pair(lower_bound(z), upper_bound(z));
+		}
+
 		void print()
 		{
 			if (root)
 				printHelper(this->root, "", true);
 		}
 
-		size_t size(){
+		size_type size(){
 			return _RBTsize;
 		}
 
-		size_t max_size(){
+		size_type max_size(){
 			return (a.max_size());
 		}
 		//-----------------------//

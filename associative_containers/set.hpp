@@ -12,33 +12,47 @@ template < class Key,
 {
 	public:
 
-	typedef Key key_type;
-	typedef Key value_type;
-	typedef Compare key_compare;
+	typedef Key 														key_type;
+	typedef Key 														value_type;
+	typedef Compare 													key_compare;
+	typedef key_compare													value_compare;
+	typedef Alloc 														allocator_type;
+	typedef typename allocator_type::reference 							reference;
+	typedef typename allocator_type::const_reference					const_reference;
+	typedef typename allocator_type::pointer							pointer;
+	typedef typename allocator_type::const_pointer						const_pointer;
+	typedef ft::RBTree< key_type, value_type, value_compare >			tree_t;
+	typedef typename tree_t::const_iterator								iterator;
+	typedef typename tree_t::const_iterator								const_iterator;
+	typedef	ft::reverse_iterator<iterator>								reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator>						const_reverse_iterator;
+	typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
+	typedef typename tree_t::size_type									size_type;
 
-	class value_compare : std::binary_function<key_type, value_type, bool>
-	{
-		friend class set;
-	protected:
-		key_compare comp;
 
-		value_compare(key_compare c) : comp(c) {};
-	public:
-		bool operator()(const value_type& x, const value_type& y) const
-		{
-			return comp(x, y);
-		}
-	};
-	
-	typedef ft::RBTree<key_type, value_type, value_compare> tree_t;
-	typedef typename tree_t::iterator iterator;
-	typedef const iterator const_iterator;
-	typedef	ft::reverse_iterator<iterator>			reverse_iterator;
-	typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
-
-	explicit set( const Compare& comp = Compare(), const Alloc& alloc = Alloc())
+	explicit set( const key_compare& comp = key_compare(), const Alloc& alloc = Alloc())
 	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {
 		_SETsize = 0;
+	};
+
+	template <class InputIterator>
+  	set (InputIterator first, InputIterator last,
+       const key_compare& comp = key_compare(),
+       const Alloc& alloc = Alloc())
+	   : tree(comp, alloc)
+	   {
+		   insert(first, last);
+	   };
+
+	set (const set& x) : tree(x.tree)
+	{
+		insert(x.begin(), x.end());
+	};
+
+	set& operator=(const set & x)
+	{
+		tree = x.tree;
+		return *this;
 	};
 
 	//--------------ITERATORS----------------//
@@ -47,7 +61,17 @@ template < class Key,
 		return tree.begin();
 	}
 
+	const_iterator begin() const
+	{
+		return tree.begin();
+	}
+
 	iterator end()
+	{
+		return tree.end();
+	}
+
+	const_iterator end() const
 	{
 		return tree.end();
 	}
@@ -73,8 +97,6 @@ template < class Key,
 	}
 
 	//---------------CAPACITY---------------//
-	typedef size_t	size_type;
-
 	bool empty() const{
 		return (!_SETsize ? 1 : 0);
 	}
@@ -114,11 +136,12 @@ template < class Key,
 		erase(*position);
 	}
 
-	void erase(Key value) // erase (2, in cppreference)
+	size_type erase (const value_type& val)
 	{
-		tree.deletion(value);
+		size_type ret = tree.deletion(val);
 		_SETsize = tree.size();
-	}
+		return ret;
+	};
 
 	void erase(iterator first, iterator last){
 		while (first != last)
@@ -151,7 +174,6 @@ template < class Key,
         _SETsize = 0;
     }
 
-	//clear()
 	//--------------OBSERVERS----------------//
 	key_compare key_comp() const
 	{
@@ -164,6 +186,28 @@ template < class Key,
 	};
 
 	//--------------OPERATIONS--------------//
+	iterator find (const value_type& val) const{
+		return (tree.search(val));
+	}
+
+	size_type count (const value_type& val) const{
+		if (tree.count(val))
+			return 1;
+		return 0;
+	}
+
+	iterator lower_bound(const value_type& val) const{
+		return tree.lower_bound(val);
+	}
+
+	iterator upper_bound(const value_type& val) const{
+		return tree.upper_bound(val);
+	}
+
+	pair<iterator,iterator> equal_range(const value_type& val) const{
+		return tree.equal_range(val);
+	}
+
 
 	//--------------SUPPORT--------------// da cancellare in pre-push
 
@@ -172,7 +216,7 @@ template < class Key,
 		tree.print();	
 	}
 
-	size_t SETgetsize(){	//x prova, da eliminare
+	size_type SETgetsize(){	//x prova, da eliminare
 		return (_SETsize);
 	}
 

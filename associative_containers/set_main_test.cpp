@@ -161,8 +161,9 @@ int main()
 	test_set.insert("13");
 	test_set.erase("5");
 	test_set.erase("2");
-	test_set.erase("11");
-	test_set.erase("11");
+	std::cout << "tring to delete 11, result: " << test_set.erase("11") << std::endl;
+	std::cout << "tring to delete 11, result: " << test_set.erase("11") << std::endl;
+	std::cout << "\n----------print set----------" << std::endl;
 	test_set.print();
 	// */
 	

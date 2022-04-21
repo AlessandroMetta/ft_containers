@@ -32,17 +32,18 @@ template < class Key,
 		}
 	};
 	
-	typedef ft::RBTree< key_type, value_type, value_compare > tree_t;
-	typedef typename tree_t::iterator iterator;
+	typedef ft::RBTree< key_type, value_type, value_compare >	tree_t;
+	typedef typename tree_t::iterator							iterator;
+	typedef const iterator										const_iterator;
+	typedef	ft::reverse_iterator<iterator>						reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator>				const_reverse_iterator;
+
 
 	explicit map( const Compare& comp = Compare(), const Alloc& alloc = Alloc())
 	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
 
-	void print()
-	{
-		tree.print();
-	}
 
+	// Iterators
 	iterator begin()
 	{
 		return tree.begin();
@@ -53,17 +54,32 @@ template < class Key,
 		return tree.end();
 	}
 
+	//-------------MODIFIERS---------------//
 	ft::pair<iterator, bool> insert(value_type pair)
 	{
 		return tree.insertion(pair);
 	}
 
-	// erase (3, in cppreference)
-	void erase(key_type value)
+	void erase (iterator position)
+	{
+		erase(*position);
+	};
+
+	size_type erase (const key_type& k)
 	{
 		return tree.deletion(ft::make_pair(value, mapped_type()));
-	}
+	};
 
+	void erase (iterator first, iterator last)
+	{
+		while (first != last)
+		{
+			erase(*first);
+			first++;
+		}
+	};
+	
+	//	observers
 	key_compare key_comp() const
 	{
 		return Compare();
@@ -73,6 +89,12 @@ template < class Key,
 	{
 		return key_comp();
 	};
+
+	// useful
+	void print()
+	{
+		tree.print();
+	}
 
 	private:
 		tree_t	tree;

@@ -66,7 +66,7 @@ namespace ft
 		reference operator*() const
 		{
 			Iter tmp = base_iterator;
-			return (*(--tmp));
+			return *--tmp;
 		};
 
 		pointer operator->() const
