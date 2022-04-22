@@ -2,7 +2,7 @@
 
 the aim of the project is re-coding the most common standard template library container and relative functions
 
-## Log del 22 aprile, h 17
+## Log del 22 aprile, h 19
 ### to-do-list
 #### vector: to-check
 #### set: to-check
@@ -10,7 +10,7 @@ the aim of the project is re-coding the most common standard template library co
 - problema su erase: a livello di RBTree, non vengono eliminati i nodi con due figli
 - sono da implementare tutti i metodi. vedi reference
 - erase necessita di ritornarte il numero di elementi eliminati (1 o 0)
-#### stack: not started
+#### stack: to-check
 
 ## link utili
 - [link](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/) per implementare albero rosso-nero
