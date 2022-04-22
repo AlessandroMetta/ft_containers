@@ -186,7 +186,11 @@ template < class Key,
 	};
 
 	//--------------OPERATIONS--------------//
-	iterator find (const value_type& val) const{
+	iterator find (const value_type& val) {
+		return (tree.search(val));
+	}
+
+	const_iterator find (const value_type& val) const{
 		return (tree.search(val));
 	}
 
@@ -196,18 +200,34 @@ template < class Key,
 		return 0;
 	}
 
-	iterator lower_bound(const value_type& val) const{
+	iterator lower_bound(const value_type& val) {
 		return tree.lower_bound(val);
 	}
 
-	iterator upper_bound(const value_type& val) const{
+	const_iterator lower_bound(const value_type& val) const{
+		return tree.lower_bound(val);
+	}
+
+	iterator upper_bound(const value_type& val) {
 		return tree.upper_bound(val);
 	}
 
-	pair<iterator,iterator> equal_range(const value_type& val) const{
+	const_iterator upper_bound(const value_type& val) const{
+		return tree.upper_bound(val);
+	}
+
+	pair<iterator, iterator> equal_range(const value_type& val) {
 		return tree.equal_range(val);
 	}
 
+	pair<const_iterator, const_iterator> equal_range(const value_type& val) const{
+		return tree.equal_range(val);
+	}
+
+    allocator_type get_allocator() const
+	{
+		return tree.a();
+	}
 
 	//--------------SUPPORT--------------// da cancellare in pre-push
 

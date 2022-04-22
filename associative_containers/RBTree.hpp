@@ -12,8 +12,9 @@ namespace ft
 {
 
 	template < class T > struct Node	{
-		typedef	struct Node< T >*	NodePtr;
-		T value;
+		typedef T					value_type;
+		typedef	struct Node< value_type >*	NodePtr;
+		value_type value;
 		NodePtr parent;
 		NodePtr left;
 		NodePtr right;
@@ -23,19 +24,19 @@ namespace ft
 		int		endflag;
 		NodePtr	endptr;
 
-		Node(const T& val) : value(val), parent(nullptr), color(RED),  _TNULL(false), endflag(0), endptr(nullptr){}
-		Node() : parent(nullptr), color(RED),  _TNULL(false), endflag(0), endptr(nullptr){}
+		Node(const value_type& val) : value(val), parent(nullptr), color(RED),  _TNULL(false), endflag(0), endptr(nullptr){}
+		Node() : value(), parent(nullptr), color(RED),  _TNULL(false), endflag(0), endptr(nullptr){}
 	}; // end of Node structure
 
 	template < class T > struct RBTree_iterator	{
 
-		typedef	Node< T >*					NodePtr;
-		typedef	RBTree_iterator< T >		iterator;
-		typedef	bidirectional_iterator_tag	iterator_category;
-		typedef	std::ptrdiff_t				difference_type;
-		typedef T							value_type;
-		typedef T&							reference;
-		typedef T*							pointer;
+		typedef T								value_type;
+		typedef value_type&						reference;
+		typedef value_type*						pointer;
+		typedef	Node< value_type >*				NodePtr;
+		typedef	RBTree_iterator< value_type >	iterator;
+		typedef	bidirectional_iterator_tag		iterator_category;
+		typedef	std::ptrdiff_t					difference_type;
 
 		NodePtr father;
 		NodePtr TNULL;
@@ -96,10 +97,6 @@ namespace ft
 				node = node->parent;
 				return *this;
 			}
-			/*
-			if (!node->parent)
-				lancia eccezione
-			*/
 			if (!node->left->_TNULL){
 				node = node->left;
 				while(!node->right->_TNULL)
@@ -131,14 +128,14 @@ namespace ft
 	
 	template < class T > struct RBTree_const_iterator	{
 
-		typedef	Node< T >*					NodePtr;
-		typedef	RBTree_const_iterator< T >	const_iterator;
-		typedef	RBTree_iterator< T >		iterator;
-		typedef	bidirectional_iterator_tag	iterator_category;
-		typedef	std::ptrdiff_t				difference_type;
-		typedef T							value_type;
-		typedef value_type &							reference;
+		typedef T									value_type;
+		typedef value_type&							reference;
 		typedef value_type*							pointer;
+		typedef	Node< value_type >*					NodePtr;
+		typedef	RBTree_const_iterator< value_type >	const_iterator;
+		typedef	RBTree_iterator< value_type >		iterator;
+		typedef	bidirectional_iterator_tag			iterator_category;
+		typedef	std::ptrdiff_t						difference_type;
 
 		NodePtr father;
 		NodePtr TNULL;
@@ -690,7 +687,22 @@ namespace ft
             _LAST = _END;
         }
 
-		iterator search(const value_type& z) const{
+		iterator search(const value_type& z) {
+			NodePtr search = root;
+			while (search != TNULL)
+			{
+				if (z == search->value)
+					return iterator(search);
+				if(comparison()(z, search->value))
+					search = search->left;
+				else
+					search = search->right;
+			}
+			iterator last = end();
+			return last;
+		}
+
+		const_iterator search(const value_type& z) const{
 			NodePtr search = root;
 			while (search != TNULL)
 			{
@@ -718,14 +730,21 @@ namespace ft
 			return false;
 		}
 
-		iterator lower_bound(const value_type& z) const{
+		iterator lower_bound(const value_type& z) {
 			iterator it = begin();
 			while(it != end() && z > *it)
 				it++;
 			return (it);
 		}
 
-		iterator upper_bound(const value_type& z) const{
+		const_iterator lower_bound(const value_type& z) const{
+			iterator it = begin();
+			while(it != end() && z > *it)
+				it++;
+			return (it);
+		}
+
+		iterator upper_bound(const value_type& z) {
 			iterator it = begin();
 			while(it != end() && z > *it)
 				it++;
@@ -736,9 +755,26 @@ namespace ft
 			return(it);
 		}
 
-		pair<iterator,iterator> equal_range(const value_type& z) const{
+		const_iterator upper_bound(const value_type& z) const{
+			iterator it = begin();
+			while(it != end() && z > *it)
+				it++;
+			if (it == end())
+				return (it);
+			else if (*it == z)
+				return (++it);
+			return(it);
+		}
+
+
+		pair<iterator,iterator> equal_range(const value_type& z) {
 			return ft::make_pair(lower_bound(z), upper_bound(z));
 		}
+
+		pair<const_iterator, const_iterator> equal_range(const value_type& z) const{
+			return ft::make_pair(lower_bound(z), upper_bound(z));
+		}
+
 
 		void print()
 		{
