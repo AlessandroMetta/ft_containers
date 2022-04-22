@@ -2,14 +2,10 @@
 
 the aim of the project is re-coding the most common standard template library container and relative functions
 
-## Log del 8 aprile, h 16
+## Log del 22 aprile, h 17
 ### to-do-list
-#### vector: on-going
-- negli overload di funzioni con template, l'enable-if non deve controllare se il tipo di dato passato è un intero, ma se è un [iteratore](https://stackoverflow.com/questions/4335962/how-to-check-if-a-template-parameter-is-an-iterator-type-or-not)
-#### set: on-going
-- sono da implementare i metodi: get_allocator
-- mancano main di test
-- problema con la funzione rend (vedi main di test relativo: ft_containers/associative_containers/set_tester/iterators.cpp)
+#### vector: to-check
+#### set: to-check
 #### map: on-going
 - problema su erase: a livello di RBTree, non vengono eliminati i nodi con due figli
 - sono da implementare tutti i metodi. vedi reference
