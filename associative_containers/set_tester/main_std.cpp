@@ -90,5 +90,48 @@ int main()
 		else
 			std::cout << "set1.count(\"set1_tre\") = non lo é" << std::endl;
 	}
+	{
+		std::cout << "\ntest erase" << std::endl;
+		test_set.erase(5);
+		test_set.erase(2);
+		std::cout << "tring to erase 11, result: " << test_set.erase(11) << std::endl;
+		std::cout << "tring to erase 11, result: " << test_set.erase(11) << std::endl;
+	}
+	{
+		set<int> alice;
+		set<int> bob;
+		set<int> eve;
+
+		alice.insert(1);
+		alice.insert(2);
+		alice.insert(3);
+		bob.insert(7);
+		bob.insert(8);
+		bob.insert(9);
+		bob.insert(10);
+		eve.insert(1);
+		eve.insert(2);
+		eve.insert(3);
+	
+		std::cout << std::boolalpha;
+	
+		// Compare non equal containers
+		std::cout << "alice == bob returns " << (alice == bob) << '\n';
+		std::cout << "alice != bob returns " << (alice != bob) << '\n';
+		std::cout << "alice <  bob returns " << (alice < bob) << '\n';
+		std::cout << "alice <= bob returns " << (alice <= bob) << '\n';
+		std::cout << "alice >  bob returns " << (alice > bob) << '\n';
+		std::cout << "alice >= bob returns " << (alice >= bob) << '\n';
+	
+		std::cout << '\n';
+	
+		// Compare equal containers
+		std::cout << "alice == eve returns " << (alice == eve) << '\n';
+		std::cout << "alice != eve returns " << (alice != eve) << '\n';
+		std::cout << "alice <  eve returns " << (alice < eve) << '\n';
+		std::cout << "alice <= eve returns " << (alice <= eve) << '\n';
+		std::cout << "alice >  eve returns " << (alice > eve) << '\n';
+		std::cout << "alice >= eve returns " << (alice >= eve) << '\n';
+	}
 	return 0;
 }

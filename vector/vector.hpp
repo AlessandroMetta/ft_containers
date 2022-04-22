@@ -363,35 +363,13 @@ namespace ft
 	template< class T, class Alloc >
 	bool operator==( const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs )
 	{
-		if (lhs.size() != rhs.size())
-			return false;
-
-		for (size_t i = 0; i < lhs.size(); i++)
-		{
-			if (lhs[i] != rhs[i])
-				return false;
-		}
-
-		return true;
+		return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 	}
 
 	template< class T, class Alloc >
 	bool operator<( const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs )
 	{
-		size_t size;
-
-		if (lhs.size() > rhs.size())
-			size = rhs.size();
-		else
-			size = lhs.size();
-
-		for(size_t i = 0; i < size; i++)
-		{
-			if (lhs[i] != rhs[i])
-				return(lhs[i] < rhs[i]);
-		}
-
-		return(lhs.size() < rhs.size()); 
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(),rhs.begin(), rhs.end());
 	}
 
 	template< class T, class Alloc >
