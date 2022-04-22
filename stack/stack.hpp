@@ -110,7 +110,7 @@ bool operator>( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>&
 template< class T, class Container >
 bool operator>=( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs )
 {
-	return (lhs < rhs);
+	return !(lhs < rhs);
 };
 	
 } // namespace ft
