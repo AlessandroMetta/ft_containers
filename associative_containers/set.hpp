@@ -30,30 +30,36 @@ template < class Key,
 	typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
 
 
-	explicit set( const key_compare& comp = key_compare(), const Alloc& alloc = Alloc())
-	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {
-		_SETsize = 0;
-	};
+	explicit set( const key_compare& comp = key_compare(),
+				const allocator_type& alloc = allocator_type())
+	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
 
 	template <class InputIterator>
   	set (InputIterator first, InputIterator last,
        const key_compare& comp = key_compare(),
-       const Alloc& alloc = Alloc())
+       const allocator_type& alloc = allocator_type())
 	   : tree(comp, alloc)
-	   {
-		   insert(first, last);
-	   };
+	{
+		insert(first, last);
+	};
 
 	set (const set& x) : tree(x.tree)
 	{
 		insert(x.begin(), x.end());
 	};
 
+	~set() {};
+
 	set& operator=(const set & x)
 	{
 		tree = x.tree;
 		return *this;
 	};
+
+    allocator_type get_allocator() const
+	{
+		return tree.a();
+	}
 
 	//--------------ITERATORS----------------//
 	iterator begin()
@@ -98,28 +104,25 @@ template < class Key,
 
 	//---------------CAPACITY---------------//
 	bool empty() const{
-		return (!_SETsize ? 1 : 0);
+		return (!tree.size() ? 1 : 0);
 	}
 	
 	size_type size() const{
-		return (_SETsize);
+		return tree.size();
 	}
 
 	size_type max_size(){
-		return(tree.max_size());
+		return tree.max_size();
 	}
 
 	//-------------MODIFIERS---------------//
 	ft::pair<iterator, bool> insert(const value_type& value)
 	{
-		ft::pair<iterator, bool> ret = tree.insertion(value);
-		_SETsize = tree.size();
-		return (ret);
+		return tree.insertion(value);
 	}
 
 	iterator insert (iterator position, const value_type& val){
-		iterator it = position;
-		++it;
+		(void)position;
 		return(insert(val).first);
 	}
 
@@ -138,9 +141,7 @@ template < class Key,
 
 	size_type erase (const value_type& val)
 	{
-		size_type ret = tree.deletion(val);
-		_SETsize = tree.size();
-		return ret;
+		return tree.deletion(val);
 	};
 
 	void erase(iterator first, iterator last){
@@ -163,7 +164,6 @@ template < class Key,
 	void swap(set& x)
 	{
 		swapContent(&tree, &x.tree);
-		swapContent(&_SETsize, &x._SETsize);
 		swapContent(&alloc, &x.alloc);
 		swapContent(&comp, &x.comp);
 	}
@@ -171,7 +171,6 @@ template < class Key,
 	void clear()
     {
         tree.clear();
-        _SETsize = 0;
     }
 
 	//--------------OBSERVERS----------------//
@@ -224,11 +223,6 @@ template < class Key,
 		return tree.equal_range(val);
 	}
 
-    allocator_type get_allocator() const
-	{
-		return tree.a();
-	}
-
 	//--------------SUPPORT--------------// da cancellare in pre-push
 
 	void print()
@@ -236,15 +230,10 @@ template < class Key,
 		tree.print();	
 	}
 
-	size_type SETgetsize(){	//x prova, da eliminare
-		return (_SETsize);
-	}
-
 	private:
 		tree_t			tree;
 		key_compare		comp;
 		allocator_type	alloc;
-		size_type		_SETsize;
 };
 
 template< class Key, class Compare, class Alloc >

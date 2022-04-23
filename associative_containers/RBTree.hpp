@@ -675,7 +675,6 @@ namespace ft
 			return iterator(_END);
 		}
 
-
 		//support function
 
 		void clear()
@@ -687,16 +686,28 @@ namespace ft
             _LAST = _END;
         }
 
+/*
+		if (comparison()(z, nodeIter->value) && !comparison()(nodeIter->value, z))
+			nodeIter = nodeIter->left;
+		else if (!comparison()(z, nodeIter->value) && comparison()(nodeIter->value, z))
+			nodeIter = nodeIter->right;
+		else
+		{
+			toDelete = nodeIter;
+			break ;
+		}
+*/
+
 		iterator search(const value_type& z) {
 			NodePtr search = root;
 			while (search != TNULL)
 			{
-				if (z == search->value)
-					return iterator(search);
-				if(comparison()(z, search->value))
+				if(comparison()(z, search->value) && !comparison()(search->value, z))
 					search = search->left;
-				else
+				else if (!comparison()(z, search->value) && comparison()(search->value, z))
 					search = search->right;
+				else
+					return iterator(search);
 			}
 			iterator last = end();
 			return last;
@@ -706,12 +717,12 @@ namespace ft
 			NodePtr search = root;
 			while (search != TNULL)
 			{
-				if (z == search->value)
-					return iterator(search);
-				if(comparison()(z, search->value))
+				if(comparison()(z, search->value) && !comparison()(search->value, z))
 					search = search->left;
-				else
+				else if (!comparison()(z, search->value) && comparison()(search->value, z))
 					search = search->right;
+				else
+					return iterator(search);			
 			}
 			return end();
 		}
@@ -720,12 +731,12 @@ namespace ft
 			NodePtr search = root;
 			while (search != TNULL)
 			{
-				if (z == search->value)
-					return true;
-				if(comparison()(z, search->value))
+				if(comparison()(z, search->value) && !comparison()(search->value, z))
 					search = search->left;
-				else
+				else if (!comparison()(z, search->value) && comparison()(search->value, z))
 					search = search->right;
+				else
+					return true;			
 			}
 			return false;
 		}
@@ -774,19 +785,18 @@ namespace ft
 		pair<const_iterator, const_iterator> equal_range(const value_type& z) const{
 			return ft::make_pair(lower_bound(z), upper_bound(z));
 		}
-
-
+		
 		void print()
 		{
 			if (root)
 				printHelper(this->root, "", true);
 		}
 
-		size_type size(){
+		size_type size() const {
 			return _RBTsize;
 		}
 
-		size_type max_size(){
+		size_type max_size() const {
 			return (a.max_size());
 		}
 		//-----------------------//
