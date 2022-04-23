@@ -2,7 +2,7 @@
 
 the aim of the project is re-coding the most common standard template library container and relative functions
 
-## Log del 22 aprile, h 19
+## Log del 23 aprile, h 17.30
 ### to-do-list
 #### vector: to-check
 #### set: to-check
