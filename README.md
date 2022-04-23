@@ -7,9 +7,8 @@ the aim of the project is re-coding the most common standard template library co
 #### vector: to-check
 #### set: to-check
 #### map: on-going
-- problema su erase: a livello di RBTree, non vengono eliminati i nodi con due figli
-- sono da implementare tutti i metodi. vedi reference
-- erase necessita di ritornarte il numero di elementi eliminati (1 o 0)
+- problema non ben identificato con le funzione begin con map costruiti come copie o assegnati
+- mancano le funzioni: da eqaul_range (dalla cppreference), inclusi gli operatori di confronto
 #### stack: to-check
 
 ## link utili
