@@ -132,7 +132,7 @@ int main()
 		}
 	}
 	*/
-	
+	{
 	if (test_map.count(10))
 		std::cout << "test_map.count(10) = é presente" << std::endl;
 	else
@@ -143,8 +143,21 @@ int main()
 	it = test_map.find(90);
 	if (it == test_map.end())
 		std::cout << "test_map.find(90) == test_map.end()" << std::endl;
+	}
+	{
+				//TEST bound
+		std::cout << "\nTEST bound" << std::endl;
+		map_iterator it = test_map.lower_bound(1);
+		map_iterator ti = test_map.upper_bound(1);
+		std::cout << "test_set.lower_bound(1) = " << it->first << std::endl;
+		std::cout << "test_set.upper_bound(1) = " << ti->first << std::endl;
 
+		ft::pair<map_iterator, map_iterator> range = test_map.equal_range(1);
+		std::cout << "test_set.equal_range(1).first = " << range.first->first << std::endl;
+		std::cout << "test_set.equal_range(1).second = " << range.second->first << std::endl;
+	}
 
+	// test_map.print();
 
 	/*
 	{

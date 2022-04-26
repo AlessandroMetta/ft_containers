@@ -686,18 +686,6 @@ namespace ft
             _LAST = _END;
         }
 
-/*
-		if (comparison()(z, nodeIter->value) && !comparison()(nodeIter->value, z))
-			nodeIter = nodeIter->left;
-		else if (!comparison()(z, nodeIter->value) && comparison()(nodeIter->value, z))
-			nodeIter = nodeIter->right;
-		else
-		{
-			toDelete = nodeIter;
-			break ;
-		}
-*/
-
 		iterator search(const value_type& z) {
 			NodePtr search = root;
 			while (search != TNULL)
@@ -743,40 +731,39 @@ namespace ft
 
 		iterator lower_bound(const value_type& z) {
 			iterator it = begin();
-			while(it != end() && z > *it)
+			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
 				it++;
 			return (it);
 		}
 
 		const_iterator lower_bound(const value_type& z) const{
 			iterator it = begin();
-			while(it != end() && z > *it)
+			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
 				it++;
 			return (it);
 		}
 
 		iterator upper_bound(const value_type& z) {
 			iterator it = begin();
-			while(it != end() && z > *it)
+			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
 				it++;
 			if (it == end())
 				return (it);
-			else if (*it == z)
+			else if ((!comparison()(z, *it) && !comparison()(*it, z)))
 				return (++it);
 			return(it);
 		}
 
 		const_iterator upper_bound(const value_type& z) const{
 			iterator it = begin();
-			while(it != end() && z > *it)
+			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
 				it++;
 			if (it == end())
 				return (it);
-			else if (*it == z)
+			else if ((!comparison()(z, *it) && !comparison()(*it, z)))
 				return (++it);
 			return(it);
 		}
-
 
 		pair<iterator,iterator> equal_range(const value_type& z) {
 			return ft::make_pair(lower_bound(z), upper_bound(z));
@@ -801,7 +788,12 @@ namespace ft
 		}
 		//-----------------------//
 	}; // END OF CLASS RBTREE
-	
+	template <class Key, class Value>
+	std::ostream& operator<<(std::ostream& out, ft::pair<Key,Value>& v)
+	{
+		return out <<" <"<<v.first<<","<< v.second<<"> ";
+	}
+
 } // namespace ft
 
 #endif

@@ -223,6 +223,8 @@ template < class Key,
 		swapContent(&comp, &x.comp);
 	}
 
+	//-------------LOOKUP---------------//
+
 	size_type count( const Key& key ) const
 	{
 		if (tree.count(ft::make_pair(key, mapped_type())))
@@ -240,8 +242,32 @@ template < class Key,
 		return tree.search(ft::make_pair(key, mapped_type()));
 	};
 
-	
-	//	observers
+	pair<iterator, iterator> equal_range( const Key& key ) {
+		return tree.equal_range(ft::make_pair(key, mapped_type()));
+	}
+
+	pair<const_iterator, const_iterator> equal_range( const Key& key ) const{
+		return tree.equal_range(ft::make_pair(key, mapped_type()));
+	}
+
+	iterator lower_bound( const Key& key ) {
+		return tree.lower_bound(ft::make_pair(key, mapped_type()));
+	}
+
+	const_iterator lower_bound( const Key& key ) const{
+		return tree.lower_bound(ft::make_pair(key, mapped_type()));
+	}
+
+	iterator upper_bound( const Key& key ) {
+		return tree.upper_bound(ft::make_pair(key, mapped_type()));
+	}
+
+	const_iterator upper_bound( const Key& key ) const{
+		return tree.upper_bound(ft::make_pair(key, mapped_type()));
+	}
+
+	//-------------OBSERVERS---------------//
+
 	key_compare key_comp() const
 	{
 		return Compare();
