@@ -43,22 +43,23 @@ template < class Key,
 		insert(first, last);
 	};
 
-	set (const set& x) : tree(x.tree)
-	{
-		insert(x.begin(), x.end());
-	};
+	set( const set& other ): tree(other.tree){
+        *this = other;
+    }
 
 	~set() {};
 
-	set& operator=(const set & x)
-	{
-		tree = x.tree;
-		return *this;
-	};
+	set& operator=( const set& other )
+    {
+        tree = other.tree;
+        comp = other.comp;
+        alloc = other.get_allocator();
+        return *this;
+    };
 
     allocator_type get_allocator() const
 	{
-		return tree.a();
+		return tree.getAllocator();
 	}
 
 	//--------------ITERATORS----------------//
@@ -247,7 +248,7 @@ template< class Key, class Compare, class Alloc >
 bool operator==( const ft::set<Key,Compare,Alloc>& lhs,
                  const ft::set<Key,Compare,Alloc>& rhs )
 {
-	return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+	return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 };
 
 template< class Key, class Compare, class Alloc >

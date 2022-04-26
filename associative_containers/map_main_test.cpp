@@ -8,7 +8,7 @@ int main()
 	typedef int									mapped_type;
 	typedef ft::map < key_type, mapped_type >	map_type;
 	typedef ft::pair< key_type, mapped_type >	pair_type;
-	typedef map_type::iterator					map_iterator;
+	// typedef map_type::iterator					map_iterator;
 	// typedef map_type::reverse_iterator			map_rev_iterator;
 
 	map_type test_map;
@@ -23,8 +23,8 @@ int main()
 	// test_map.print();
 	// test_map.erase(5); // numeri che danno problemi: 10, 5 e 15
 
-	/*
-	{ // test at []
+	
+/* 	{ // test at []
 		try
 		{
 			std::cout << "test at: " << test_map.at(10) << std::endl;
@@ -43,6 +43,15 @@ int main()
 		{
 			std::cerr << e.what() << '\n';
 		}
+		try
+		{
+			test_map[90] = 11;
+			std::cout << "test at after [] modification: " << test_map.at(90) << std::endl;
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
 	}
 
 	{ // test empty, size and max_size
@@ -50,10 +59,10 @@ int main()
 		std::cout << "test size: " << test_map.size() << std::endl;
 		std::cout << "test max_size: " << test_map.max_size() << std::endl;
 	}
-	*/
+ */	
 	
-	
-	/* ERRORS 
+/* 
+	// ERRORS 
 	{ // test clear
 		map_type clear_test(test_map);
 		clear_test.clear();
@@ -130,9 +139,9 @@ int main()
 				}
 			}
 		}
-	}
-	*/
-	{
+	} */
+	
+/* 	{
 	if (test_map.count(10))
 		std::cout << "test_map.count(10) = é presente" << std::endl;
 	else
@@ -156,7 +165,7 @@ int main()
 		std::cout << "test_set.equal_range(1).first = " << range.first->first << std::endl;
 		std::cout << "test_set.equal_range(1).second = " << range.second->first << std::endl;
 	}
-
+ */
 	// test_map.print();
 
 	/*
@@ -193,6 +202,43 @@ int main()
 		}
 	}
 	*/
+
+    ft::map<int, char> alice;
+	alice.insert(pair_type(1, 'a'));
+	alice.insert(pair_type(2, 'b'));
+	alice.insert(pair_type(3, 'c'));
+
+    ft::map<int, char> bob;
+	bob.insert(pair_type(7, 'Z'));
+	bob.insert(pair_type(8, 'Y'));
+	bob.insert(pair_type(9, 'X'));
+	bob.insert(pair_type(10, 'W'));
+	
+    ft::map<int, char> eve;
+	eve.insert(pair_type(1, 'a'));
+	eve.insert(pair_type(2, 'b'));
+	eve.insert(pair_type(3, 'c'));
+
+ 
+    std::cout << std::boolalpha;
+ 
+    // Compare non equal containers
+    std::cout << "alice == bob returns " << (alice == bob) << '\n';
+    std::cout << "alice != bob returns " << (alice != bob) << '\n';
+    std::cout << "alice <  bob returns " << (alice < bob) << '\n';
+    std::cout << "alice <= bob returns " << (alice <= bob) << '\n';
+    std::cout << "alice >  bob returns " << (alice > bob) << '\n';
+    std::cout << "alice >= bob returns " << (alice >= bob) << '\n';
+ 
+    std::cout << '\n';
+ 
+    // Compare equal containers
+    std::cout << "alice == eve returns " << (alice == eve) << '\n';
+    std::cout << "alice != eve returns " << (alice != eve) << '\n';
+    std::cout << "alice <  eve returns " << (alice < eve) << '\n';
+    std::cout << "alice <= eve returns " << (alice <= eve) << '\n';
+    std::cout << "alice >  eve returns " << (alice > eve) << '\n';
+    std::cout << "alice >= eve returns " << (alice >= eve) << '\n';
 
 	return 0;
 }

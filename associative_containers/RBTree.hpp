@@ -533,6 +533,44 @@ namespace ft
 			root = TNULL;
 		};
 
+		RBTree<K, T, Compare, Allocator> & operator=(RBTree<K, T, Compare, Allocator> const & src){
+            if (this == &src)
+                return(*this);
+            if (root != TNULL)
+            {
+                deleteAllNodes(root);
+                root = TNULL;
+                _END->parent = nullptr;
+                _LAST = _END;
+            }
+            else{
+                TNULL = a.allocate(1);
+                a.construct(TNULL);
+                TNULL->color = 0;
+                TNULL->left = nullptr;
+                TNULL->right = nullptr;
+                TNULL->_TNULL = true;
+                root = TNULL;
+                _END = a.allocate(1);
+                a.construct(_END);
+                _END->color = 0;
+                _END->left = nullptr;
+                _END->right = nullptr;
+                _END->_TNULL = true;
+                _END->endflag = 2;
+                _LAST = _END;
+            }
+            const_iterator iter = src.begin();
+            while(iter != src.end()){
+                insertion(*iter);
+                iter++;
+            }
+            return(*this);
+        }
+        RBTree(const RBTree<K, T, Compare, Allocator>& other) : a(other.getAllocator()), compare_function(other.compare_function){
+            *this = other;
+        }
+
 		~RBTree()
 		{
 			deleteAllNodes(root);
@@ -786,6 +824,10 @@ namespace ft
 		size_type max_size() const {
 			return (a.max_size());
 		}
+
+		Allocator getAllocator() const{
+            return a;
+        }
 		//-----------------------//
 	}; // END OF CLASS RBTREE
 	template <class Key, class Value>

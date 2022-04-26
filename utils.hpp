@@ -53,7 +53,7 @@ namespace ft
 	template <class T1, class T2>
 	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
-		return ((lhs.first == rhs.first) && (lhs.second == rhs.second));
+		return lhs.first == rhs.first && lhs.second == rhs.second;
 	};
 
 	template <class T1, class T2>
@@ -65,7 +65,7 @@ namespace ft
 	template <class T1, class T2>
 	bool operator<  (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{
-		return ((lhs.first < rhs.first) || !((rhs.first < lhs.first) && lhs.second < rhs.second));
+		return lhs.first < rhs.first || (!(rhs.first < lhs.first) && lhs.second < rhs.second);
 	};
 
 	template <class T1, class T2>
@@ -114,8 +114,8 @@ namespace ft
 	template <> struct is_integral < unsigned long int > { static const bool value = true; };
 	template <> struct is_integral < unsigned long long int > { static const bool value = true; };
 	
-	/**********************	LEXICOGRAPHICAL_COMPARE	**********************/
-
+	/**********************	LEXICOGRAPHICAL_COMPARE	***********************/
+	
 	template<class InputIt1, class InputIt2>
 	bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
 								InputIt2 first2, InputIt2 last2)
@@ -139,6 +139,19 @@ namespace ft
 		return (first1 == last1) && (first2 != last2);
 	}
 
+/* 	template<class InputIt1, class InputIt2>
+	bool map_lexicographical_compare(InputIt1 first1, InputIt1 last1,
+								InputIt2 first2, InputIt2 last2)
+	{
+		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 ) {
+			if (first1->first < first2->first && first1->second < first2->second) return true;
+			if (first2->second < first1->second && first2->first < first1->first) return false;
+		}
+		return (first1 == last1) && (first2 != last2);
+	}
+ */
+	/**********************	EQUAL	***********************/
+
 	template<class InputIt1, class InputIt2>
 	bool equal(InputIt1 first1, InputIt1 last1, 
 			InputIt2 first2)
@@ -151,7 +164,17 @@ namespace ft
 		return true;
 	}
 
-
+	template<class InputIt1, class InputIt2, class BinaryPredicate>
+	bool equal(InputIt1 first1, InputIt1 last1, 
+			InputIt2 first2, BinaryPredicate p)
+	{
+		for (; first1 != last1; ++first1, ++first2) {
+			if (!p(*first1, *first2)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 
