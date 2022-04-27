@@ -588,7 +588,7 @@ namespace ft
 			while (search != TNULL)
 			{
 				father = search;
-				if (z == search->value)
+				if (!comparison()(z, search->value) && !comparison()(search->value, z))
 					return ft::make_pair(iterator(search), false);
 				if(comparison()(z, search->value))
 					search = search->left;
