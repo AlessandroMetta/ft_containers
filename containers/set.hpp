@@ -59,7 +59,7 @@ template < class Key,
 
     allocator_type get_allocator() const
 	{
-		return tree.getAllocator();
+		return alloc;
 	}
 
 	//--------------ITERATORS----------------//
@@ -146,27 +146,33 @@ template < class Key,
 	};
 
 	void erase(iterator first, iterator last){
+		// while (first != last)
+		// {
+		// 	erase(*first);
+		// 	first++;
+		// }
+		iterator next = first;
 		while (first != last)
 		{
-			erase(*first);
+			next = first;
 			first++;
+			tree.deletion(*next);
 		}
 	}
 
 	template<class Type> //Di supporto per swap
-	void swapContent(Type *a, Type *b) 
+	void swapContent(Type &a, Type &b) 
 	{
-		Type *tmp;
-		tmp = a;
+		Type tmp(a);
 		a = b;
 		b = tmp;
 	}
 
 	void swap(set& x)
 	{
-		swapContent(&tree, &x.tree);
-		swapContent(&alloc, &x.alloc);
-		swapContent(&comp, &x.comp);
+		swapContent(tree, x.tree);
+		swapContent(alloc, x.alloc);
+		swapContent(comp, x.comp);
 	}
 
 	void clear()

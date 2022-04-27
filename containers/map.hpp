@@ -6,9 +6,7 @@
 namespace ft {
 
 template < class Key,
-			class T,
-			class Compare = std::less< Key >,
-			class Alloc = std::allocator< ft::pair< const Key, T > >
+			class T, class Compare = std::less< Key >, class Alloc = std::allocator< ft::pair< const Key, T > >
 			> class map
 {
 	public:
@@ -76,7 +74,7 @@ template < class Key,
 
 	allocator_type get_allocator() const
 	{
-		return tree.getAllocator();
+		return alloc;
 	};
 
 	//--------------ELEMENT ACCESS----------------//
@@ -211,19 +209,18 @@ template < class Key,
 	};
 
 	template<class Type> //Di supporto per swap
-	void swapContent(Type *a, Type *b) 
+	void swapContent(Type &a, Type &b) 
 	{
-		Type *tmp;
-		tmp = a;
+		Type tmp(a);
 		a = b;
 		b = tmp;
 	}
 
 	void swap(map& x)
 	{
-		swapContent(&tree, &x.tree);
-		swapContent(&alloc, &x.alloc);
-		swapContent(&comp, &x.comp);
+		swapContent(tree, x.tree);
+		swapContent(alloc, x.alloc);
+		swapContent(comp, x.comp);
 	}
 
 	//-------------LOOKUP---------------//

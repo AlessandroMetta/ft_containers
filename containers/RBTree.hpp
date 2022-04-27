@@ -142,6 +142,7 @@ namespace ft
 		NodePtr TNULL;
 		NodePtr node;
 
+		RBTree_const_iterator(){}
 		RBTree_const_iterator(iterator p) : father(p.father), node(p.node) {}
 		RBTree_const_iterator(NodePtr node) : father(NULL), node(node) {}
 		RBTree_const_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
