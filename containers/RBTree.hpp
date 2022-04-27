@@ -42,6 +42,7 @@ namespace ft
 		NodePtr TNULL;
 		NodePtr node;
 
+		RBTree_iterator() {}
 		RBTree_iterator(NodePtr node) : father(NULL), node(node) {}
 		RBTree_iterator(NodePtr node, NodePtr TNULL) : node(node), TNULL(TNULL) {}
 
