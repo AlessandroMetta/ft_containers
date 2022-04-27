@@ -1,14 +1,15 @@
 #ifndef __FT_ALGORITHM_HPP__
 # define __FT_ALGORITHM_HPP__
 
-#include "iterator/iterator.hpp"
+#include "iterator.hpp"
+#include <type_traits>
 
 namespace ft
 {
 	/****************************	UTILS	******************************/
 
 	template <typename T>
-	void swap(T& a, T& b)
+	void ft_swap(T& a, T& b)
 	{
 		T c = a;
 		a = b;
@@ -99,20 +100,22 @@ namespace ft
 
 	/****************************	IS_INTEGRAL	******************************/
 	
-	template < class T > struct is_integral { static const bool value = false; };
-	template <> struct is_integral < bool > { static const bool value = true; };
-	template <> struct is_integral < char > { static const bool value = true; };
-	template <> struct is_integral <wchar_t> { static const bool value = true; };
-	template <> struct is_integral < signed char > { static const bool value = true; };
-	template <> struct is_integral < unsigned char > { static const bool value = true; };
-	template <> struct is_integral < short int > { static const bool value = true; };
-	template <> struct is_integral < int > { static const bool value = true; };
-	template <> struct is_integral < long int > { static const bool value = true; };
-	template <> struct is_integral < long long int > { static const bool value = true; };
-	template <> struct is_integral < unsigned int > { static const bool value = true; };
-	template <> struct is_integral < unsigned short int > { static const bool value = true; };
-	template <> struct is_integral < unsigned long int > { static const bool value = true; };
-	template <> struct is_integral < unsigned long long int > { static const bool value = true; };
+	template < class T > struct is_integral : public std::false_type {};
+	template <> struct is_integral < bool > : public std::true_type {};
+	template <> struct is_integral < char > : public std::true_type {};
+	template <> struct is_integral <wchar_t> : public std::true_type {};
+	template <> struct is_integral <char16_t> : public std::true_type {};
+	template <> struct is_integral <char32_t> : public std::true_type {};
+	template <> struct is_integral < signed char > : public std::true_type {};
+	template <> struct is_integral < unsigned char > : public std::true_type {};
+	template <> struct is_integral < short int > : public std::true_type {};
+	template <> struct is_integral < int > : public std::true_type {};
+	template <> struct is_integral < long int > : public std::true_type {};
+	template <> struct is_integral < long long int > : public std::true_type {};
+	template <> struct is_integral < unsigned int > : public std::true_type {};
+	template <> struct is_integral < unsigned short int > : public std::true_type {};
+	template <> struct is_integral < unsigned long int > : public std::true_type {};
+	template <> struct is_integral < unsigned long long int > : public std::true_type {};
 	
 	/**********************	LEXICOGRAPHICAL_COMPARE	***********************/
 	
@@ -139,17 +142,6 @@ namespace ft
 		return (first1 == last1) && (first2 != last2);
 	}
 
-/* 	template<class InputIt1, class InputIt2>
-	bool map_lexicographical_compare(InputIt1 first1, InputIt1 last1,
-								InputIt2 first2, InputIt2 last2)
-	{
-		for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2 ) {
-			if (first1->first < first2->first && first1->second < first2->second) return true;
-			if (first2->second < first1->second && first2->first < first1->first) return false;
-		}
-		return (first1 == last1) && (first2 != last2);
-	}
- */
 	/**********************	EQUAL	***********************/
 
 	template<class InputIt1, class InputIt2>
