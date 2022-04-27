@@ -8,12 +8,12 @@ namespace ft
 {
 	/****************************	UTILS	******************************/
 
-	template <typename T>
-	void ft_swap(T& a, T& b)
+	template<class Type> //Di supporto per swap
+	void swapContent(Type &a, Type &b) 
 	{
-		T c = a;
+		Type tmp(a);
 		a = b;
-		b = c;
+		b = tmp;
 	}
 
 	template <typename T>

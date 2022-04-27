@@ -208,19 +208,11 @@ template < class Key,
 		}
 	};
 
-	template<class Type> //Di supporto per swap
-	void swapContent(Type &a, Type &b) 
-	{
-		Type tmp(a);
-		a = b;
-		b = tmp;
-	}
-
 	void swap(map& x)
 	{
-		swapContent(tree, x.tree);
-		swapContent(alloc, x.alloc);
-		swapContent(comp, x.comp);
+		ft::swapContent(tree, x.tree);
+		ft::swapContent(alloc, x.alloc);
+		ft::swapContent(comp, x.comp);
 	}
 
 	//-------------LOOKUP---------------//

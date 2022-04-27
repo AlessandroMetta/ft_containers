@@ -19,12 +19,9 @@ template <
 	container_type c;
 
 	public:
-	explicit stack (const container_type& cont = container_type())
-	{
-		c = cont;
-	};
+	stack (const container_type& cont = container_type()) : c(cont)	{};
 
-	explicit stack (const stack& other)
+	stack (const stack& other)
 	{
 		*this = other;
 	};

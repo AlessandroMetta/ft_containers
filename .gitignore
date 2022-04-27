@@ -3,4 +3,8 @@ a.out*
 *.output
 .DS_Store
 ft_containers-unit-test
+system
+__*
+containers/config.hpp
+*.cpp
 containers/unit_tests

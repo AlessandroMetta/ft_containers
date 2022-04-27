@@ -187,7 +187,7 @@ namespace ft
 	public:
 		// default constructor: vector()
 		explicit vector (const allocator_type& alloc = allocator_type())
-		: _data(0), _alloc(alloc), _capacity(0), _size(0)
+		: _alloc(alloc), _capacity(0), _size(0), _data(NULL)
 		{
 			_data = _alloc.allocate( 0 );
 		};
@@ -195,29 +195,51 @@ namespace ft
 		// fill constructor: vector ( size , value )
 		explicit vector (size_type n, const value_type& val = value_type(),
                  const allocator_type& alloc = allocator_type())
-			: _data(0), _alloc(alloc), _capacity(0), _size(0)
+			: _alloc(alloc), _capacity(n), _size(n), _data(_alloc.allocate(n))
 		{
-			_data = _alloc.allocate( 0 );
-			assign(n, val);
+			size_type i = -1;
+			while ( ++i < n )
+				_alloc.construct( _data + i, val );
 		};
 
+		private:
+		template <class InputIterator>
+		size_type distance(InputIterator first, InputIterator last)
+		{
+			size_type len = 0;
+			InputIterator it = first;
+			while ( it++ != last )
+				len++;
+			return len;
+		}
+
+		public:
 		// range (inizialized_ constructor: vactor ( first , last )
 		template <class InputIterator>
         	vector (InputIterator first, InputIterator last,
                 const allocator_type& alloc = allocator_type(),
 				typename ft::enable_if<!ft::is_integral<InputIterator>::value,
 				int>::type* = 0	)
-				: _data(0), _alloc(alloc), _capacity(0), _size(0)
+				: _alloc(alloc), _capacity(distance(first, last)), _size(_capacity), _data(NULL)
 		{
-			_data = _alloc.allocate(0);
-			assign(first, last);
+			if (_capacity)
+				_data = _alloc.allocate(_capacity);
+			size_type i = -1;
+			while (++i < _size)
+			{
+				_alloc.construct(_data + i, *first);
+				first++;
+			}
 		};
 
 		// copy constructor: vector ( vector2 )
 		vector( const vector& other )
-		: _data(0), _alloc(other._alloc), _capacity(0), _size(0)
-		{
-			this->operator=(other);
+		: _alloc(other._alloc), _capacity(other._capacity), _size(other._size), _data(NULL) {
+			if (_capacity)
+				_data = _alloc.allocate(_capacity);
+			size_type i = -1;
+			while (++i < _size)
+				_alloc.construct(_data + i, *(other._data + i));
 		};
 
 		// Destructor
@@ -225,13 +247,24 @@ namespace ft
 		{
 			for (size_type i = 0; i < _capacity; i++)
 				_alloc.destroy(_data + i);
-			_alloc.deallocate(_data, _capacity);
+			if (_capacity)
+				_alloc.deallocate(_data, _capacity);
 		};
 
 		vector & operator=(const vector& x)
 		{
+			for (size_type i = 0; i < _capacity; i++)
+				_alloc.destroy(_data + i);
+			if (_capacity)
+				_alloc.deallocate(_data, _capacity);
 			_alloc = x._alloc;
-			assign(x.begin(), x.end());
+			_size = x._size;
+			_capacity = x._capacity;
+			if (_capacity)
+				_data = _alloc.allocate(_capacity);
+			size_type i = -1;
+			while (++i < _size)
+				_alloc.construct(_data + i, *(x._data + i));
 			return *this;
 		};
 
@@ -246,28 +279,24 @@ namespace ft
 			return std::numeric_limits<size_type>::max() / sizeof(value_type);
 		};
 		
-		void resize (size_type n, value_type val = value_type())
+		void resize( size_type count, value_type value = value_type() )
 		{
-			pointer tmp;
-			if (n > _size)
-			{
-				tmp = _alloc.allocate( n );
-				for (size_type i = 0; i < _size; i++)
-					tmp[i] = _data[i];
-				for (size_type i = _size; i < n; i++)
-					tmp[i] = val;
-			}
+			if (_size > count)
+				_size = count;
 			else
 			{
-				tmp = _alloc.allocate( _capacity );
-				for (size_type i = 0; i < n; i++)
-					tmp[i] = _data[i];
+				for (size_type i = 0; i < _capacity; i++)
+					_alloc.destroy(_data + i);
+				if (_capacity)
+					_alloc.deallocate(_data, _capacity);
+				_size = count;
+				_capacity = count;
+				if (_capacity)
+					_data = _alloc.allocate(_capacity);
+				size_type i = -1;
+				while (++i < _size)
+					_alloc.construct(_data + i, value);
 			}
-			for (size_type i = 0; i < _capacity; i++)
-				_alloc.destroy(_data + i);
-			_alloc.deallocate(_data, _capacity);
-			_size = n;
-			_data = tmp;
 		};
 
 		size_type capacity () const
@@ -494,9 +523,10 @@ namespace ft
 
 		void swap (vector& other)
 		{
-			ft::ft_swap(_data, other._data);
-			ft::ft_swap(_size, other._size);
-			ft::ft_swap(_capacity, other._capacity);
+			ft::swapContent(_data, other._data);
+			ft::swapContent(_size, other._size);
+			ft::swapContent(_capacity, other._capacity);
+			ft::swapContent(_alloc, other._alloc);
 		};
 
 		void clear()
@@ -507,10 +537,10 @@ namespace ft
 		};
 
 	private:
-		pointer _data;
-		allocator_type _alloc;
-		size_type _capacity;
-		size_type _size;
+		allocator_type	_alloc;
+		size_type		_capacity;
+		size_type		_size;
+		pointer			_data;
 	};
 
 	// NON-MEMBER FUNCTION
