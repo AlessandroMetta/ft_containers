@@ -189,22 +189,24 @@ template < class Key,
 		}
 	};
 
-	void erase (iterator position)
-	{
-		erase(*position);
-	};
-
 	size_type erase (const key_type& value)
 	{
 		return tree.deletion(ft::make_pair(value, mapped_type()));
 	};
 
+	void erase (iterator position)
+	{
+		erase(position->first);
+	};
+
 	void erase (iterator first, iterator last)
 	{
+		iterator next = first;
 		while (first != last)
 		{
-			erase(*first);
+			next = first;
 			first++;
+			tree.deletion(*next);
 		}
 	};
 
