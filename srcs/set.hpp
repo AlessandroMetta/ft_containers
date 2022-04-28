@@ -28,11 +28,13 @@ template < class Key,
 	typedef	ft::reverse_iterator<const_iterator>						const_reverse_iterator;
 	typedef typename tree_t::size_type									size_type;
 	typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
+	typedef Key*														Key_pt;
 
 
 	explicit set( const key_compare& comp = key_compare(),
 				const allocator_type& alloc = allocator_type())
-	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
+	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {
+	};
 
 	template <class InputIterator>
   	set (InputIterator first, InputIterator last,
@@ -119,7 +121,13 @@ template < class Key,
 	//-------------MODIFIERS---------------//
 	ft::pair<iterator, bool> insert(const value_type& value)
 	{
-		return tree.insertion(value);
+		ft::pair<iterator, bool> b;
+		Key_pt a = alloc.allocate(1);
+		alloc.construct(a, value);
+		b = tree.insertion(*a);
+		alloc.destroy(a);
+		alloc.deallocate(a, 1);
+		return b;
 	}
 
 	iterator insert (iterator position, const value_type& val){
@@ -160,11 +168,19 @@ template < class Key,
 		}
 	}
 
+	template<class Type> //Di supporto per swap
+	void swapContent(Type &a, Type &b) 
+	{
+		Type tmp(a);
+		a = b;
+		b = tmp;
+	}
+
 	void swap(set& x)
 	{
-		ft::swapContent(tree, x.tree);
-		ft::swapContent(alloc, x.alloc);
-		ft::swapContent(comp, x.comp);
+		swapContent(tree, x.tree);
+		swapContent(alloc, x.alloc);
+		swapContent(comp, x.comp);
 	}
 
 	void clear()
@@ -233,6 +249,8 @@ template < class Key,
 		tree_t			tree;
 		key_compare		comp;
 		allocator_type	alloc;
+		Key_pt 			a;
+
 };
 
 template< class Key, class Compare, class Alloc >

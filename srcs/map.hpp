@@ -4,11 +4,16 @@
 #include "RBTree.hpp"
 
 namespace ft {
-
 template < class Key,
-			class T, class Compare = std::less< Key >, class Alloc = std::allocator< ft::pair< const Key, T > >
+			class T, 
+			class Compare = std::less< Key >, 
+			class Alloc = std::allocator< ft::pair<const Key, T > >
 			> class map
 {
+
+	//alloc  pair<key, t>
+	//alloc node<class>
+
 	public:
 
 	typedef	Key													key_type;
@@ -42,13 +47,13 @@ template < class Key,
 	typedef typename tree_t::const_iterator						const_iterator;
 	typedef	ft::reverse_iterator<iterator>						reverse_iterator;
 	typedef	ft::reverse_iterator<const_iterator>				const_reverse_iterator;
+	typedef ft::pair<const Key, T>*								Pair_pointer;
 
 	//--------------CONSTRUCTORS----------------//
 
 	explicit map( const key_compare& comp = key_compare(),
 				const allocator_type& alloc = allocator_type())
 	: tree(tree_t(value_compare(key_comp()))), comp(comp), alloc(alloc) {};
-
 	template< class InputIt >
 	map( InputIt first, InputIt last,
 		const key_compare& comp = key_compare(),
@@ -96,9 +101,12 @@ template < class Key,
 
 	T& operator[]( const Key& key )
     {
+		Pair_pointer a = alloc.allocate(1);
+		alloc.construct(a, ft::make_pair(key, mapped_type()));
         iterator found = tree.search(ft::make_pair(key, mapped_type()));
         if (found == end())
-            found = tree.insertion(ft::make_pair(key, mapped_type())).first;
+			found = tree.insertion(*a).first;
+		alloc.deallocate(a, 1);
         return found->second;
     };
 	
@@ -168,7 +176,13 @@ template < class Key,
 
 	ft::pair<iterator, bool> insert( const value_type& value )
 	{
-		return tree.insertion(value);
+		Pair_pointer a = alloc.allocate(1);
+		ft::pair<iterator, bool> b;
+		alloc.construct(a, value);
+		b = tree.insertion(*a);
+		alloc.destroy(a);
+		alloc.deallocate(a, 1);
+		return b;
 	};
 
 	iterator insert( iterator hint, const value_type& value )
@@ -208,11 +222,19 @@ template < class Key,
 		}
 	};
 
+	template<class Type> //Di supporto per swap
+	void swapContent(Type &a, Type &b) 
+	{
+		Type tmp(a);
+		a = b;
+		b = tmp;
+	}
+
 	void swap(map& x)
 	{
-		ft::swapContent(tree, x.tree);
-		ft::swapContent(alloc, x.alloc);
-		ft::swapContent(comp, x.comp);
+		swapContent(tree, x.tree);
+		swapContent(alloc, x.alloc);
+		swapContent(comp, x.comp);
 	}
 
 	//-------------LOOKUP---------------//
@@ -280,6 +302,7 @@ template < class Key,
 		tree_t		tree;
 		Compare		comp;
 		Alloc		alloc;
+		Pair_pointer p;
 };
 
 	template< class Key, class T, class Compare, class Alloc >
