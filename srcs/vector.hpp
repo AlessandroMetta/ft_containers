@@ -250,17 +250,16 @@ namespace ft
 
 		vector & operator=(const vector& x)
 		{
-			for (size_type i = 0; i < _capacity; i++)
-				_alloc.destroy(_data + i);
+			if (this == &x)
+				return *this;
+			clear();
 			if (_capacity)
 				_alloc.deallocate(_data, _capacity);
-			_alloc = x._alloc;
 			_size = x._size;
 			_capacity = x._capacity;
 			if (_capacity)
 				_data = _alloc.allocate(_capacity);
-			size_type i = -1;
-			while (++i < _size)
+			for (size_type i = 0; i < _size; ++i)
 				_alloc.construct(_data + i, *(x._data + i));
 			return *this;
 		};

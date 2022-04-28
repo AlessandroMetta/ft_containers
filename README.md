@@ -3,17 +3,14 @@
 the aim of the project is re-coding the most common standard template library container and relative functions
 
 ## testing phase
-### Log del 27 aprile, h 19
+### Log del 28 aprile, h 17
 #### vector:
-- slow on swap
+- too slow on swap
 #### set:
 - slow on erase (pos & iter)
 - slow on upper/lower_bound
-- failed on using allocator
 #### map: on-going
-- slow on erase (pos & iter)
 - slow on upper/lower_bound
-- failed on using allocator
 #### stack:
 - leaks on constructor
 
