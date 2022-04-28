@@ -5,11 +5,11 @@
 /*				or comment #include				  */
 /*		if you haven't yet some container		  */
 /**************************************************/
-#define VECTOR			"../../../containers/vector.hpp"
-#define STACK			"../../../containers/stack.hpp"
-#define MAP			  	"../../../containers/map.hpp"
-#define SET			  	"../../../containers/set.hpp"
-#define UTILITIES		"../../../containers/utils.hpp"
+#define VECTOR			"../../../srcs/vector.hpp"
+#define STACK			"../../../srcs/stack.hpp"
+#define MAP			  	"../../../srcs/map.hpp"
+#define SET			  	"../../../srcs/set.hpp"
+#define UTILITIES		"../../../srcs/utils.hpp"
 
 /* comment this to turn OFF flags (-WWW, -std=98) */
 #define FLAGS
