@@ -10,10 +10,6 @@ template < class Key,
 			class Alloc = std::allocator< ft::pair<const Key, T > >
 			> class map
 {
-
-	//alloc  pair<key, t>
-	//alloc node<class>
-
 	public:
 
 	typedef	Key													key_type;
