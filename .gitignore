@@ -2,9 +2,9 @@
 a.out*
 *.output
 .DS_Store
-ft_containers-unit-test
+tester
 system
 __*
-containers/config.hpp
+srcs/config.hpp
 *.cpp
-containers/unit_tests
+srcs/unit_tests
