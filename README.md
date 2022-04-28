@@ -5,7 +5,6 @@ the aim of the project is re-coding the most common standard template library co
 ## testing phase
 ### Log del 27 aprile, h 19
 #### vector:
-- timeout on assign
 - slow on swap
 #### set:
 - slow on erase (pos & iter)
