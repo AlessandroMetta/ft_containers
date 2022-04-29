@@ -15,7 +15,7 @@ the aim of the project is re-coding the most common standard template library co
 - [link](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/) per implementare albero rosso-nero
 - [link](https://programmer.ink/think/use-a-red-black-tree-to-encapsulate-set-and-map-at-the-same-time.html) per implementare
 map e set con alebro rosso-nero.
-- [tester](https://github.com/divinepet/ft_containers-unit-test/issues)
+- [tester](https://github.com/divinepet/ft_containers-unit-test)
 
 
 ## useful information
