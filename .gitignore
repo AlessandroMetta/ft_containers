@@ -8,3 +8,4 @@ __*
 srcs/config.hpp
 *.cpp
 srcs/unit_tests
+main

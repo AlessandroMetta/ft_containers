@@ -254,13 +254,6 @@ template < class Key,
 };
 
 template< class Key, class Compare, class Alloc >
-void swap( ft::set<Key,Compare,Alloc>& lhs,
-           ft::set<Key,Compare,Alloc>& rhs )
-{
-	lhs.swap(rhs);
-};
-
-template< class Key, class Compare, class Alloc >
 bool operator==( const ft::set<Key,Compare,Alloc>& lhs,
                  const ft::set<Key,Compare,Alloc>& rhs )
 {
@@ -302,5 +295,15 @@ bool operator>=( const ft::set<Key,Compare,Alloc>& lhs,
 	return !(lhs < rhs);
 };
 
+}
+
+namespace std
+{
+	template< class Key, class Compare, class Alloc >
+	void swap( ft::set<Key,Compare,Alloc>& lhs,
+			ft::set<Key,Compare,Alloc>& rhs )
+	{
+		lhs.swap(rhs);
+	};
 }
 #endif
