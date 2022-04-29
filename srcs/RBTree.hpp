@@ -769,40 +769,64 @@ namespace ft
 			return false;
 		}
 
-		iterator lower_bound(const value_type& z) {
-			iterator it = begin();
-			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
-				it++;
-			return (it);
+		iterator lower_bound(const value_type& z) { //4
+			NodePtr search = root;
+			while (search != TNULL)
+			{
+				if (!comparison()(z, search->value) && !comparison()(search->value, z))
+					return iterator(search);
+				else if (comparison()(z, search->value) && !comparison()(search->value, z)){
+					if (search->left == TNULL)
+						return iterator(search);
+					search = search->left;
+				}
+				else
+				{
+					if (search->right == TNULL)
+						return ++iterator(search);
+					search = search->right;
+				}
+			}
+			return end();
 		}
 
 		const_iterator lower_bound(const value_type& z) const{
-			iterator it = begin();
-			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
-				it++;
-			return (it);
+			NodePtr search = root;
+			while (search != TNULL)
+			{
+				if (!comparison()(z, search->value) && !comparison()(search->value, z))
+					return const_iterator(search);
+				else if (comparison()(z, search->value) && !comparison()(search->value, z)){
+					if (search->left == TNULL)
+						return const_iterator(search);
+					search = search->left;
+				}
+				else
+				{
+					if (search->right == TNULL)
+						return ++const_iterator(search);
+					search = search->right;
+				}
+			}
+			return end();
 		}
 
 		iterator upper_bound(const value_type& z) {
-			iterator it = begin();
-			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
-				it++;
-			if (it == end())
-				return (it);
-			else if ((!comparison()(z, *it) && !comparison()(*it, z)))
-				return (++it);
-			return(it);
+			iterator tmp = lower_bound(z);
+
+			if (tmp == end() || comparison()(z, *tmp))
+				return tmp;
+			else
+				return ++tmp;
 		}
 
 		const_iterator upper_bound(const value_type& z) const{
-			iterator it = begin();
-			while(it != end() && (!comparison()(z, *it) && comparison()(*it, z)))
-				it++;
-			if (it == end())
-				return (it);
-			else if ((!comparison()(z, *it) && !comparison()(*it, z)))
-				return (++it);
-			return(it);
+			const_iterator tmp = lower_bound(z);
+
+			if (tmp == end() || comparison()(z, *tmp))
+				return tmp;
+			else
+				return ++tmp;
 		}
 
 		pair<iterator,iterator> equal_range(const value_type& z) {
