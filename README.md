@@ -3,7 +3,7 @@
 the aim of the project is re-coding the most common standard template library container and relative functions
 
 ## testing phase
-### Log del 28 aprile, h 17.30
+### Log del 29 aprile, h 13.15
 #### vector: perfect
 #### map:
 - slow on upper/lower_bound
