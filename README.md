@@ -4,13 +4,12 @@ the aim of the project is re-coding the most common standard template library co
 
 ## testing phase
 ### Log del 28 aprile, h 17.30
-#### vector:
-- too slow on swap
-#### set:
-- slow on upper/lower_bound
+#### vector: perfect
 #### map:
 - slow on upper/lower_bound
-#### stack:
+#### stack: perfect
+#### set:
+- slow on upper/lower_bound
 
 ## link utili
 - [link](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/) per implementare albero rosso-nero
