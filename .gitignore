@@ -1,11 +1,4 @@
 .vscode
 a.out*
-*.output
 .DS_Store
-tester
-system
-__*
-srcs/config.hpp
-*.cpp
-srcs/unit_tests
-main
+tester1

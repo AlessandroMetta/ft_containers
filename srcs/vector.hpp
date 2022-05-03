@@ -256,7 +256,8 @@ namespace ft
 			if (_capacity)
 				_alloc.deallocate(_data, _capacity);
 			_size = x._size;
-			_capacity = x._capacity;
+			if (_capacity < x._capacity)
+				_capacity = x._capacity;
 			if (_capacity)
 				_data = _alloc.allocate(_capacity);
 			for (size_type i = 0; i < _size; ++i)
@@ -514,29 +515,36 @@ namespace ft
 			if (position > end()) throw std::out_of_range("out of range");
 			size_type pos = distance(begin(), position);
 			if (_capacity < _size + count)
-				reserve(_size + count);
-			for (size_type i = _size; i > pos + count; i--)
-				_alloc.construct( (_data + i + count) , *(_data + i) );
-			for (size_type i = pos + count - 1; i >= pos; i--)
-				_alloc.construct( _data + i , value );
+				_capacity = _size + count;
+			pointer tmp = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < pos; i++)
+				_alloc.construct( tmp + i , *(_data + i) );
+			for (size_type i = pos; i < pos + count; i++)
+				_alloc.construct( (tmp + i) , value );
+			for (size_type i = pos; i < _size; i++)
+				_alloc.construct( tmp + i + count, *(_data + i) );
+			for (size_type i = 0; i < _size; i++)
+				_alloc.destroy(_data + i);
+			_alloc.deallocate(_data, _capacity);
+			_data = tmp;
 			_size = _size + count;
 		};
 
 		template<class InputIt>
-	typename ft::enable_if<!ft::is_integral<InputIt>::value, bool>::type
-	validate_iterator_values(InputIt first, InputIt last, size_t range) {
-		pointer reserved_buffer;
-		reserved_buffer = _alloc.allocate(range);
-		bool result = true;
-		size_t i = 0;
+		typename ft::enable_if<!ft::is_integral<InputIt>::value, bool>::type
+		validate_iterator_values(InputIt first, InputIt last, size_t range) {
+			pointer reserved_buffer;
+			reserved_buffer = _alloc.allocate(range);
+			bool result = true;
+			size_t i = 0;
 
-		for (;first != last; ++first, ++i) {
-			try { reserved_buffer[i] = *first; }
-			catch (...) { result = false; break; }
+			for (;first != last; ++first, ++i) {
+				try { reserved_buffer[i] = *first; }
+				catch (...) { result = false; break; }
+			}
+			_alloc.deallocate(reserved_buffer, range);
+			return result;
 		}
-		_alloc.deallocate(reserved_buffer, range);
-		return result;
-	}
 
 		template <class InputIterator>
     		void insert (
@@ -552,26 +560,20 @@ namespace ft
 			if (!validate_iterator_values(first, last, count))
 				throw std::exception();
 
-			if (_size + count > _capacity)
-			{
-				size_type new_capacity = _capacity;
-				while (_size + count > new_capacity)
-					new_capacity *= 2;
-				reserve(new_capacity);
-				for (size_type i = _size; i < _size + count; i--)
-					_alloc.construct( (_data + i + count) , *(_data + i) );
-				for (size_type i = pos; first != last; i++, first++)
-					_alloc.construct( _data + i , *first );
-				_size = _size + count;
-			}
-			else
-			{
-				for (size_type i = _size; i > pos + count; i--)
-					_data[i + count] = _data[i];
-				for (size_type i = pos; first != last; i++, first++)
-					_data[i] = *first;
-				_size = _size + count;
-			}
+			while(_capacity < _size + count)
+				_capacity *= 2;
+			pointer tmp = _alloc.allocate(_capacity);
+			for (size_type i = 0; i < pos; i++)
+				_alloc.construct( tmp + i , *(_data + i) );
+			for (size_type i = pos; i < pos + count; i++, first++)
+				_alloc.construct( (tmp + i) , *first );
+			for (size_type i = pos; i < _size; i++)
+				_alloc.construct( tmp + i + count, *(_data + i) );
+			for (size_type i = 0; i < _size; i++)
+				_alloc.destroy(_data + i);
+			_alloc.deallocate(_data, _capacity);
+			_data = tmp;
+			_size = _size + count;
 		};
 
 		iterator erase (iterator position)
@@ -579,6 +581,7 @@ namespace ft
 			size_type pos = distance(begin(), position);
 			for (size_type i = pos; i < _size; i++)
 				_data[i] = _data[i + 1];
+			_alloc.destroy(_data + _size);
 			_size--;
 			return position;
 		};
