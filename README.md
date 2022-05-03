@@ -2,14 +2,7 @@
 
 the aim of the project is re-coding the most common standard template library container and relative functions
 
-## testing phase
-### Log del 29 aprile, h 13.15
-#### vector: perfect
-#### map:
-- slow on upper/lower_bound
-#### stack: perfect
-#### set:
-- slow on upper/lower_bound
+# finished, need evaluation
 
 ## link utili
 - [link](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/) per implementare albero rosso-nero
