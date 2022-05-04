@@ -1,5 +1,6 @@
 # ft_containers
 ### Questo progetto é stato completato ed è stato corretto da studenti 42 il 3/5/2022, ottenendo 125/100
+##### Ringrazio [@Mike](https://github.com/baeyoo), [@Dani](https://github.com/01Zero10) e [@Bryan](https://github.com/BR7YAN) per il loro contributo
 
 L'obiettivo del progetto é quello di implementare i contenitori e alcune funzioni utili della libreria STL.
 
@@ -23,6 +24,6 @@ Discorso a parte va fatto sugli iteratori, che non sono altro che un puntatore a
 
 ## Informazioni utili
 - leggi attentamente il subject
-- Tutte le informazioni che ti saranno necessarie per l'implementazione di ogni contenitore le trovi su i siti di reference, personalmente consiglio [questo](https://en.cppreference.com/w/)
+- Tutte le informazioni che ti saranno necessarie per l'implementazione di ogni contenitore le trovi su i siti di reference, personalmente consiglio [cppreference](https://en.cppreference.com/w/)
 - prima cosa sicuramente da comprendere appieno è la classe std::allocator.
 - Personalmente ho torovato questo progetto molto complesso, quindi è normale se ci metterai più tempo del dovuto e sicuramente trovarti dei compagni ti potrebbe aiutare molto.
