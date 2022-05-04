@@ -1,5 +1,4 @@
-# ft_containers
-[![ametta's 42 ft_containers Score](https://badge42.vercel.app/api/v2/cl2rnoexq001609juu65lu7i3/project/2518426)](https://github.com/JaeSeoKim/badge42)
+# ft_containers [![ametta's 42 ft_containers Score](https://badge42.vercel.app/api/v2/cl2rnoexq001609juu65lu7i3/project/2518426)](https://github.com/JaeSeoKim/badge42)
 ##### Ringrazio [@Mike](https://github.com/baeyoo), [@Dani](https://github.com/01Zero10) e [@Bryan](https://github.com/BR7YAN) per il loro contributo
 
 L'obiettivo del progetto é quello di implementare i contenitori e alcune funzioni utili della libreria STL.
