@@ -1,5 +1,5 @@
 # ft_containers
-### Questo progetto é stato terminato e corretto da studenti 42 il 3/5/2022, ottenendo 125/100
+### Questo progetto é stato completato ed è stato corretto da studenti 42 il 3/5/2022, ottenendo 125/100
 
 L'obiettivo del progetto é quello di implementare i contenitori e alcune funzioni utili della libreria STL.
 
@@ -15,11 +15,10 @@ In questo progetto ne vedrai quattro:
 
 Discorso a parte va fatto sugli iteratori, che non sono altro che un puntatore ad un valore della struttura dati, che può essere incrementato, decrementato o deferenziato. Come ben puoi immaginare, l'implementazione di quest'ultimo è diversa per ogni contenitore.
 
-## link utili
-- [link](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/) per implementare albero rosso-nero
-- [link](https://programmer.ink/think/use-a-red-black-tree-to-encapsulate-set-and-map-at-the-same-time.html) per implementare
-map e set con alebro rosso-nero.
-- [tester](https://github.com/divinepet/ft_containers-unit-test)
+## Link utili
+- [implementazione dell'albero rosso-nero](https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/)
+- [implementazione della map e del set con albero rosso-nero](https://programmer.ink/think/use-a-red-black-tree-to-encapsulate-set-and-map-at-the-same-time.html)
+- [tester utilizzato per validare il progetto](https://github.com/divinepet/ft_containers-unit-test)
 
 
 ## Informazioni utili
